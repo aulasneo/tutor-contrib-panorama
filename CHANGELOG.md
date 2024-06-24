@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 16.3.1 (2024-06-24)
 - Install backend from pypi
 
 ## Version 16.3.0 (2024-06-05)
