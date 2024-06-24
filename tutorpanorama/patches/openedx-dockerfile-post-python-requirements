@@ -1,4 +1,3 @@
 {% if PANORAMA_MFE_ENABLED %}
-RUN pip install 'git+https://github.com/aulasneo/panorama-openedx-backend@v{{ PANORAMA_OPENEDX_BACKEND_VERSION }}'
-    # pip install 'panorama-openedx-backend=={{ PANORAMA_OPENEDX_BACKEND_VERSION }}'
+RUN pip install 'panorama-openedx-backend=={{ PANORAMA_OPENEDX_BACKEND_VERSION }}'
 {% endif %}
