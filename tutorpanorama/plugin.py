@@ -209,15 +209,15 @@ def extract_and_load(all_, tables, force, debug) -> list[tuple[str, str]]:
     else:
         if not tables:
             raise click.BadParameter("Define either --all or --tables")
-        return [
-            (
-                'panorama', 
-                '/usr/local/bin/python /panorama-elt/panorama.py --settings '
-                f'/config/panorama_openedx_settings.yaml extract-and-load --tables {tables}'
-                f'{" --force" if force else ""}'
-                f'{" --debug" if debug else ""}'
-            )
-        ]
+        command = ('/usr/local/bin/python /panorama-elt/panorama.py --settings /config/panorama_openedx_settings.yaml '
+                   'extract-and-load --tables {tables}')
+
+        if force:
+            command += " --force"
+        if debug:
+            command += " --debug"
+
+        return [('panorama', command)]
 
 
 hooks.Filters.CLI_DO_COMMANDS.add_item(extract_and_load)
