@@ -1,10 +1,13 @@
+"""
+Tutor plugin to enable Panorama in Open edX.
+"""
 from __future__ import annotations
 
 from glob import glob
 import os
 
 import click
-import pkg_resources
+import importlib_resources
 
 from tutor import hooks, config as tutor_config
 from tutormfe.hooks import MFE_APPS
@@ -15,7 +18,7 @@ from .__about__ import __version__
 
 PANORAMA_OPENEDX_BACKEND_VERSION = '16.0.9'
 
-PANORAMA_MFE_REPO = ("https://github.com/aulasneo/frontend-app-panorama.git")
+PANORAMA_MFE_REPO = "https://github.com/aulasneo/frontend-app-panorama.git"
 
 # Tag at https://github.com/aulasneo/frontend-app-panorama.git
 PANORAMA_MFE_VERSION = 'open-release/palm.20240606'
@@ -51,7 +54,8 @@ config = {
         "LOGS_TOTAL_FILE_SIZE": "1M",
         "LOGS_UPLOAD_TIMEOUT": "15m",
         "DOCKER_IMAGE": "{{ DOCKER_REGISTRY }}aulasneo/panorama-elt:{{ PANORAMA_VERSION }}",
-        "LOGS_DOCKER_IMAGE": "{{ DOCKER_REGISTRY }}aulasneo/panorama-elt-logs:{{ PANORAMA_VERSION }}",
+        "LOGS_DOCKER_IMAGE":
+            "{{ DOCKER_REGISTRY }}aulasneo/panorama-elt-logs:{{ PANORAMA_VERSION }}",
         "MFE_ENABLED": True,
         "ADD_HEADER_LINK": False,
         "MODE": "DEMO",
@@ -59,8 +63,9 @@ config = {
         "FRONTEND_COMPONENT_HEADER_VERSION": PANORAMA_FRONTEND_COMPONENT_HEADER_VERSION,
         "FRONTEND_COMPONENT_HEADER_REPO": PANORAMA_FRONTEND_COMPONENT_HEADER_REPO,
         "ENABLE_STUDENT_VIEW": True,
-        "DEFAULT_USER_ARN": "arn:aws:quicksight:{{ PANORAMA_REGION }}:{{ PANORAMA_AWS_ACCOUNT_ID }}:"
-                            "user/default/{{ LMS_HOST }}",
+        "DEFAULT_USER_ARN":
+            "arn:aws:quicksight:{{ PANORAMA_REGION }}:{{ PANORAMA_AWS_ACCOUNT_ID }}:"
+            "user/default/{{ LMS_HOST }}",
     },
     # Add here settings that don't have a reasonable default for all users. For
     # instance: passwords, secret keys, etc.
@@ -72,21 +77,20 @@ config = {
 }
 
 # Initialization tasks
-MY_INIT_TASKS: list[tuple[str, tuple[str, ...], int]] = [
-    ("panorama", ("panorama", "tasks", "panorama-elt", "init"), hooks.priorities.LOW),
-    ("lms", ("panorama", "tasks", "lms", "init"), hooks.priorities.LOW),  # backend migrations
+MY_INIT_TASKS: list[tuple[str, str, int]] = [
+    ("panorama", "panorama-elt", hooks.priorities.LOW),
+    ("lms", "lms", hooks.priorities.LOW),  # backend migrations
 ]
 
-# For each task added to MY_INIT_TASKS, we load the task template
-# and add it to the CLI_DO_INIT_TASKS filter, which tells Tutor to
-# run it as part of the `init` job.
+# init script
 for service, template_path, priority in MY_INIT_TASKS:
-    full_path: str = pkg_resources.resource_filename(
-        "tutorpanorama", os.path.join("templates", *template_path)
-    )
-    with open(full_path, encoding="utf-8") as init_task_file:
-        init_task: str = init_task_file.read()
-    hooks.Filters.CLI_DO_INIT_TASKS.add_item((service, init_task), priority=priority)
+    with open(
+            str(importlib_resources.files(
+                "tutorpanorama") / "templates" / "panorama" / "tasks" / template_path / "init"),
+            encoding="utf-8",
+    ) as task_file:
+        hooks.Filters.CLI_DO_INIT_TASKS.add_item((service, task_file.read()), priority=priority)
+
 
 # Load all configuration entries
 hooks.Filters.CONFIG_DEFAULTS.add_items(
@@ -137,10 +141,11 @@ hooks.Filters.IMAGES_PUSH.add_items(
     ]
 )
 
-# Plugin templates
+# Add the "templates" folder as a template root
 hooks.Filters.ENV_TEMPLATE_ROOTS.add_item(
-    pkg_resources.resource_filename("tutorpanorama", "templates"),
+    str(importlib_resources.files("tutorpanorama") / "templates")
 )
+
 hooks.Filters.ENV_TEMPLATE_TARGETS.add_items(
     [
         ("panorama/build", "plugins"),
@@ -162,13 +167,8 @@ def _add_my_mfe(mfes):
     return mfes
 
 
-# Load all patches from the "patches" folder
-for path in glob(
-        os.path.join(
-            pkg_resources.resource_filename("tutorpanorama", "patches"),
-            "*",
-        )
-):
+# Load patches from files
+for path in glob(str(importlib_resources.files("tutorpanorama") / "patches" / "*")):
     with open(path, encoding="utf-8") as patch_file:
         hooks.Filters.ENV_PATCHES.add_item((os.path.basename(path), patch_file.read()))
 
@@ -180,16 +180,14 @@ hooks.Filters.ENV_TEMPLATE_VARIABLES.add_items(
 )
 
 
-########################################
 # Commands
-########################################
-
 @click.command()
 @click.option("--all", "-a", "all_", is_flag=True, default=False,
               help="Panorama: Extract and load all tables of all datasource")
 @click.option("--tables", "-t", required=False, default=None,
               help="Comma separated list of tables to extract and load")
-@click.option('--force', is_flag=True, help='Force upload all partitions. False by default', default=False)
+@click.option('--force', is_flag=True, default=False,
+              help='Force upload all partitions. False by default')
 @click.option("--debug", is_flag=True, default=False, help="Enable debugging")
 def extract_and_load(all_, tables, force, debug) -> list[tuple[str, str]]:
     """
@@ -206,18 +204,19 @@ def extract_and_load(all_, tables, force, debug) -> list[tuple[str, str]]:
                 f'{" --debug" if debug else ""}'
             )
         ]
-    else:
-        if not tables:
-            raise click.BadParameter("Define either --all or --tables")
-        command = ('/usr/local/bin/python /panorama-elt/panorama.py --settings /config/panorama_openedx_settings.yaml '
-                   'extract-and-load --tables {tables}')
+    if not tables:
+        raise click.BadParameter("Define either --all or --tables")
 
-        if force:
-            command += " --force"
-        if debug:
-            command += " --debug"
+    command = ('/usr/local/bin/python /panorama-elt/panorama.py '
+               '--settings /config/panorama_openedx_settings.yaml '
+               'extract-and-load --tables {tables}')
 
-        return [('panorama', command)]
+    if force:
+        command += " --force"
+    if debug:
+        command += " --debug"
+
+    return [('panorama', command)]
 
 
 hooks.Filters.CLI_DO_COMMANDS.add_item(extract_and_load)
