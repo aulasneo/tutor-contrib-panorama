@@ -1,4 +1,5 @@
-FROM public.ecr.aws/aws-observability/aws-for-fluent-bit:2.32.0
+# AWS public registry: https://gallery.ecr.aws/aws-observability/aws-for-fluent-bit
+FROM public.ecr.aws/aws-observability/aws-for-fluent-bit:2.32.2.20240627
 
 # LABEL about the custom image
 LABEL maintainer="devops@aulasneo.com"

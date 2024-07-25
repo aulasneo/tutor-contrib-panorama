@@ -1,6 +1,7 @@
 # Change log
 
 ## Unreleased
+- Upgrade Docker base images
 - Upgrade to Quince
 
 ## Version 16.3.1 (2024-06-24)

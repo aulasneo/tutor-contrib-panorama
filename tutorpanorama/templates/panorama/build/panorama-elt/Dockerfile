@@ -1,10 +1,11 @@
-FROM python:3.8-slim-buster
+FROM python:3.8-slim-bullseye
 LABEL Maintainer="andres@aulasneo.com"
 
 RUN mkdir config
 
 # Install cron
-RUN apt-get update && apt-get install -y cron git
+RUN apt-get update
+RUN apt-get install -y cron git
 
 RUN git clone https://github.com/aulasneo/panorama-elt.git --branch {{ PANORAMA_ELT_VERSION }}
 
