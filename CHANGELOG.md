@@ -1,5 +1,8 @@
 # Change log
 
+## Unreleased
+- Upgrade to Redwood
+
 ## Version 17.0.0 (2024-07-26)
 - Upgrade Docker base images
 - Upgrade to Quince
