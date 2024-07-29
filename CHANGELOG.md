@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 18.0.1 (2024-07-29)
 - Upgrade MFE to open-release/redwood.20240729
 
 ## Version 18.0.0 (2024-07-26)
