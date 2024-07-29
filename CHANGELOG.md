@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 17.0.1 (2024-07-29)
 - Upgrade MFE to open-release/palm.20240701
 
 ## Version 17.0.0 (2024-07-26)
