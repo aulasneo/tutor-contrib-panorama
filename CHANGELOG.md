@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 16.3.2 (2024-07-29)
 - Update MFE version
 
 ## Version 16.3.1 (2024-06-24)
