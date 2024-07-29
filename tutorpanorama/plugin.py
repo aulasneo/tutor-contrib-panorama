@@ -21,7 +21,7 @@ PANORAMA_OPENEDX_BACKEND_VERSION = '16.0.9'
 PANORAMA_MFE_REPO = "https://github.com/aulasneo/frontend-app-panorama.git"
 
 # Tag at https://github.com/aulasneo/frontend-app-panorama.git
-PANORAMA_MFE_VERSION = 'open-release/palm.20240606'
+PANORAMA_MFE_VERSION = 'open-release/palm.20240701'
 
 # Tag at https://github.com/aulasneo/panorama-elt.git
 PANORAMA_ELT_VERSION = 'v0.3.1'
