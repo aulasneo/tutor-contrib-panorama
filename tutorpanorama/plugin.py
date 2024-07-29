@@ -1,3 +1,6 @@
+"""
+Tutor plugin to install Panorama in Open edX instances.
+"""
 from __future__ import annotations
 
 from glob import glob
@@ -15,10 +18,10 @@ from .__about__ import __version__
 
 PANORAMA_OPENEDX_BACKEND_VERSION = '16.0.9'
 
-PANORAMA_MFE_REPO = ("https://github.com/aulasneo/frontend-app-panorama.git")
+PANORAMA_MFE_REPO = "https://github.com/aulasneo/frontend-app-panorama.git"
 
 # Tag at https://github.com/aulasneo/frontend-app-panorama.git
-PANORAMA_MFE_VERSION = 'open-release/palm.20240606'
+PANORAMA_MFE_VERSION = 'open-release/palm.20240701'
 
 # Tag at https://github.com/aulasneo/panorama-elt.git
 PANORAMA_ELT_VERSION = 'v0.3.1'
@@ -51,7 +54,8 @@ config = {
         "LOGS_TOTAL_FILE_SIZE": "1M",
         "LOGS_UPLOAD_TIMEOUT": "15m",
         "DOCKER_IMAGE": "{{ DOCKER_REGISTRY }}aulasneo/panorama-elt:{{ PANORAMA_VERSION }}",
-        "LOGS_DOCKER_IMAGE": "{{ DOCKER_REGISTRY }}aulasneo/panorama-elt-logs:{{ PANORAMA_VERSION }}",
+        "LOGS_DOCKER_IMAGE":
+            "{{ DOCKER_REGISTRY }}aulasneo/panorama-elt-logs:{{ PANORAMA_VERSION }}",
         "MFE_ENABLED": True,
         "ADD_HEADER_LINK": False,
         "MODE": "DEMO",
@@ -59,8 +63,9 @@ config = {
         "FRONTEND_COMPONENT_HEADER_VERSION": PANORAMA_FRONTEND_COMPONENT_HEADER_VERSION,
         "FRONTEND_COMPONENT_HEADER_REPO": PANORAMA_FRONTEND_COMPONENT_HEADER_REPO,
         "ENABLE_STUDENT_VIEW": True,
-        "DEFAULT_USER_ARN": "arn:aws:quicksight:{{ PANORAMA_REGION }}:{{ PANORAMA_AWS_ACCOUNT_ID }}:"
-                            "user/default/{{ LMS_HOST }}",
+        "DEFAULT_USER_ARN":
+            "arn:aws:quicksight:{{ PANORAMA_REGION }}:{{ PANORAMA_AWS_ACCOUNT_ID }}:"
+            "user/default/{{ LMS_HOST }}",
     },
     # Add here settings that don't have a reasonable default for all users. For
     # instance: passwords, secret keys, etc.
@@ -189,7 +194,8 @@ hooks.Filters.ENV_TEMPLATE_VARIABLES.add_items(
               help="Panorama: Extract and load all tables of all datasource")
 @click.option("--tables", "-t", required=False, default=None,
               help="Comma separated list of tables to extract and load")
-@click.option('--force', is_flag=True, help='Force upload all partitions. False by default', default=False)
+@click.option('--force', is_flag=True, default=False,
+              help='Force upload all partitions. False by default')
 @click.option("--debug", is_flag=True, default=False, help="Enable debugging")
 def extract_and_load(all_, tables, force, debug) -> list[tuple[str, str]]:
     """
@@ -206,18 +212,17 @@ def extract_and_load(all_, tables, force, debug) -> list[tuple[str, str]]:
                 f'{" --debug" if debug else ""}'
             )
         ]
-    else:
-        if not tables:
-            raise click.BadParameter("Define either --all or --tables")
-        return [
-            (
-                'panorama', 
-                '/usr/local/bin/python /panorama-elt/panorama.py --settings '
-                f'/config/panorama_openedx_settings.yaml extract-and-load --tables {tables}'
-                f'{" --force" if force else ""}'
-                f'{" --debug" if debug else ""}'
-            )
-        ]
+    if not tables:
+        raise click.BadParameter("Define either --all or --tables")
+    return [
+        (
+            'panorama',
+            '/usr/local/bin/python /panorama-elt/panorama.py --settings '
+            f'/config/panorama_openedx_settings.yaml extract-and-load --tables {tables}'
+            f'{" --force" if force else ""}'
+            f'{" --debug" if debug else ""}'
+        )
+    ]
 
 
 hooks.Filters.CLI_DO_COMMANDS.add_item(extract_and_load)

@@ -13,6 +13,10 @@ combine multiple LMS installations and even other sources of data.
 This utility is in charge of connecting to the MySQL and MongoDB tables and extracting 
 the most relevant tables. Then it uploads the data to the datalake and updates all tables and partition.
 
+.. image:: https://img.shields.io/badge/linting-pylint-yellowgreen
+    :target: https://github.com/pylint-dev/pylint
+
+
 Installation
 ------------
 
