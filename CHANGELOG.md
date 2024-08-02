@@ -1,5 +1,8 @@
 # Change log
 
+## Unreleased
+- Fixed bug in k8s init job
+
 ## Version 16.3.2 (2024-07-29)
 - Update MFE version
 
