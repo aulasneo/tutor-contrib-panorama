@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 16.4.0 (2024-08-02)
 - Fixed bug in k8s init job
 
 ## Version 16.3.2 (2024-07-29)
