@@ -1,10 +1,15 @@
 # Change log
 
+## Unreleased
+- Fix: Fixed bug in k8s init job
+
 ## Version 18.0.1 (2024-07-29)
 - Upgrade MFE to open-release/redwood.20240729
 
 ## Version 18.0.0 (2024-07-26)
 - Upgrade to Redwood
+## Version 17.0.1 (2024-07-29)
+- Upgrade MFE to open-release/palm.20240701
 
 ## Version 17.0.0 (2024-07-26)
 - Upgrade Docker base images
