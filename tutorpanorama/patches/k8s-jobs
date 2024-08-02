@@ -1,4 +1,3 @@
-{% if PANORAMA_MODE != 'DEMO' %}
 ---
 # Init job. Will only run a connection test
 apiVersion: batch/v1
@@ -22,6 +21,7 @@ spec:
           configMap:
             name: panorama-elt-config
 
+{% if PANORAMA_MODE != 'DEMO' %}
 ---
 # Cronjob. Will query the db and upload to the datalake periodically
 apiVersion: batch/v1

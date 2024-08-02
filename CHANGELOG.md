@@ -1,5 +1,8 @@
 # Change log
 
+## Unreleased
+- Fix: Fixed bug in k8s init job
+
 ## Version 17.0.1 (2024-07-29)
 - Upgrade MFE to open-release/palm.20240701
 
