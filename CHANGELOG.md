@@ -1,5 +1,8 @@
 # Change log
 
+## Unreleased
+- Upgrade backend to 16.0.12
+
 ## Version 18.1.0 (2024-08-02)
 - Fix: Fixed bug in k8s init job
 
