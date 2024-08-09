@@ -16,7 +16,7 @@ from .__about__ import __version__
 
 # Version of openedx-backend-version in PyPI
 
-PANORAMA_OPENEDX_BACKEND_VERSION = '16.0.10'
+PANORAMA_OPENEDX_BACKEND_VERSION = '16.0.12'
 
 PANORAMA_MFE_REPO = "https://github.com/aulasneo/frontend-app-panorama.git"
 
