@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 17.1.1 (2024-08-14)
 - Upgrade backend to 16.0.12
 
 ## Version 17.1.0 (2024-08-02)
