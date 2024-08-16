@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 17.1.2 (2024-08-16)
 - Upgrade PANORAMA_MFE_VERSION to 'open-release/quince.20240816' and PANORAMA_FRONTEND_COMPONENT_HEADER_VERSION to 'panorama/quince/20240809'
 
 ## Version 17.1.1 (2024-08-14)
