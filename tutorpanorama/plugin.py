@@ -21,13 +21,13 @@ PANORAMA_OPENEDX_BACKEND_VERSION = '16.0.12'
 PANORAMA_MFE_REPO = "https://github.com/aulasneo/frontend-app-panorama.git"
 
 # Tag at https://github.com/aulasneo/frontend-app-panorama.git
-PANORAMA_MFE_VERSION = 'open-release/palm.20240701'
+PANORAMA_MFE_VERSION = 'open-release/quince.20240816'
 
 # Tag at https://github.com/aulasneo/panorama-elt.git
 PANORAMA_ELT_VERSION = 'v0.3.1'
 
 # Tag at https://github.com/aulasneo/frontend-component-header-panorama
-PANORAMA_FRONTEND_COMPONENT_HEADER_VERSION = 'panorama/palm/20240529'
+PANORAMA_FRONTEND_COMPONENT_HEADER_VERSION = 'panorama/quince/20240809'
 PANORAMA_FRONTEND_COMPONENT_HEADER_REPO = 'github:aulasneo/frontend-component-header-panorama'
 
 PANORAMA_MFE_PORT = 2100
