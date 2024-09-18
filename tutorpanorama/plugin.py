@@ -193,30 +193,30 @@ def extract_and_load(all_, tables, force, debug) -> list[tuple[str, str]]:
     """
     Extract and load all, or a specific tablename
     """
+
+    command = [
+        '/usr/local/bin/python /panorama-elt/panorama.py',
+        '--settings /config/panorama_openedx_settings.yaml',
+    ]
+
+    if debug:
+        command.append('--debug')
+
+    command.append('extract-and-load')
+
     if all_:
         if tables:
             raise click.BadParameter("--all and --table cannot be used together")
-        return [
-            (
-                'panorama',
-                '/usr/local/bin/python /panorama-elt/panorama.py --settings '
-                f'/config/panorama_openedx_settings.yaml extract-and-load --all'
-                f'{" --debug" if debug else ""}'
-            )
-        ]
-    if not tables:
-        raise click.BadParameter("Define either --all or --tables")
-
-    command = ('/usr/local/bin/python /panorama-elt/panorama.py '
-               '--settings /config/panorama_openedx_settings.yaml '
-               'extract-and-load --tables {tables}')
+        command.append('--all')
+    else:
+        if not tables:
+            raise click.BadParameter("Define either --all or --tables")
+        command.append(f'--tables {tables}')
 
     if force:
-        command += " --force"
-    if debug:
-        command += " --debug"
+        command.append("--force")
 
-    return [('panorama', command)]
+    return [('panorama', ' '.join(command))]
 
 
 hooks.Filters.CLI_DO_COMMANDS.add_item(extract_and_load)

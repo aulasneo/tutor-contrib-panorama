@@ -1,6 +1,7 @@
 # Change log
 
 ## Unreleased
+- Fix: Fix bug in extract_and_load command
 - Upgrade backend to 16.0.12
 
 ## Version 18.1.0 (2024-08-02)
