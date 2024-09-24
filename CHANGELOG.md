@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 18.1.2 (2024-09-24)
 - Feat: Add PANORAMA_K8S_JOB_MEMORY setting to configure the k8s job memory request
 
 ## Version 18.1.1 (2024-09-18)
