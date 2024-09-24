@@ -1,5 +1,5 @@
 ---
-# Init job. Will only run a connection test
+# Job to initialize and to run Panorama do-commands from Tutor CLI.
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -13,6 +13,11 @@ spec:
       containers:
         - name: panorama-elt
           image: {{ PANORAMA_DOCKER_IMAGE }}
+          {% if PANORAMA_K8S_JOB_MEMORY is defined %}
+          resources:
+            requests:
+              memory: {{ PANORAMA_K8S_JOB_MEMORY }}
+          {% endif %}
           volumeMounts:
             - mountPath: /config/
               name: config

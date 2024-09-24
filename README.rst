@@ -241,6 +241,7 @@ Set the following variables to configure Panorama
     "PANORAMA_DEBUG", "False", "Set to true to run Panorama ELT in verbose debug mode"
     "PANORAMA_LOGS_TOTAL_FILE_SIZE", "1M", "Change the size of the logfiles before uploading"
     "PANORAMA_LOGS_UPLOAD_TIMEOUT", "15m", "Time before log files are uploaded even if they don't have the size limit"
+    "PANORAMA_K8S_JOB_MEMORY", "", "Memory request for Panorama job in K8s. Use only if you get OOM killed pods."
 
 
 
