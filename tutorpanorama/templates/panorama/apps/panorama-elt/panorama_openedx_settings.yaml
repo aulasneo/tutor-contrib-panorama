@@ -464,6 +464,11 @@ datasources:
       type: double
     - name: user_id
       type: int
+    partitions:
+      interval: 2 day
+      timestamp_field: modified
+      partition_fields:
+      - course_key
   - name: enterprise_enterprisecustomeruser
     fields:
     - name: id
