@@ -27,7 +27,7 @@ PANORAMA_MFE_VERSION = 'open-release/redwood.20240729'
 PANORAMA_ELT_VERSION = 'v0.3.1'
 
 # Tag at https://github.com/aulasneo/frontend-component-header-panorama
-PANORAMA_FRONTEND_COMPONENT_HEADER_VERSION = 'panorama/palm/20240529'
+PANORAMA_FRONTEND_COMPONENT_HEADER_VERSION = 'panorama/quince/20240809'
 PANORAMA_FRONTEND_COMPONENT_HEADER_REPO = 'github:aulasneo/frontend-component-header-panorama'
 
 PANORAMA_MFE_PORT = 2100
