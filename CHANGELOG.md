@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 17.1.5 (2024-10-22)
 - Fix: Fix favicon in Panorama MFE.
 - Refactor: Install header before nmp ci to improve compatibility with other plugins.
 - Chore: Upgrade docker images
