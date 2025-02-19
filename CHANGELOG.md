@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 18.1.4 (2025-02-19)
 - Fix: use panorama-elt version 0.3.2 to fix a crash when a problem is empty.
 
 ## Version 18.1.3 (2024-10-22)
