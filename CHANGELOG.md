@@ -1,5 +1,8 @@
 # Change log
 
+## Unreleased
+- Fix: use panorama-elt version 0.3.2 to fix a crash when a problem is empty.
+
 ## Version 18.1.3 (2024-10-22)
 - Fix: Fix favicon in Panorama MFE.
 - Refactor: Install header before nmp ci to improve compatibility with other plugins.

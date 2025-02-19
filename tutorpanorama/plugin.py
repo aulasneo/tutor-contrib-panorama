@@ -24,7 +24,7 @@ PANORAMA_MFE_REPO = "https://github.com/aulasneo/frontend-app-panorama.git"
 PANORAMA_MFE_VERSION = 'open-release/redwood.20240729'
 
 # Tag at https://github.com/aulasneo/panorama-elt.git
-PANORAMA_ELT_VERSION = 'v0.3.1'
+PANORAMA_ELT_VERSION = 'v0.3.2'
 
 # Tag at https://github.com/aulasneo/frontend-component-header-panorama
 PANORAMA_FRONTEND_COMPONENT_HEADER_VERSION = 'panorama/quince/20240809'
