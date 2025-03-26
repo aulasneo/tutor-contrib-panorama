@@ -1,4 +1,0 @@
-{% if PANORAMA_MFE_ENABLED and PANORAMA_ADD_HEADER_LINK %}
-# Install the Panorama frontend component header
-RUN npm install "{{ PANORAMA_FRONTEND_COMPONENT_HEADER_REPO }}#{{ PANORAMA_FRONTEND_COMPONENT_HEADER_VERSION }}"
-{% else %}# Panorama header or MFE not enabled. Set 'PANORAMA_ADD_HEADER_LINK: True' to replace the current header in the learning MFE with one with a link to the Panorama MFE{% endif %}

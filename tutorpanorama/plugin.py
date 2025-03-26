@@ -9,7 +9,7 @@ import os
 import click
 import importlib_resources
 
-from tutor import hooks, config as tutor_config
+from tutor import fmt, hooks, config as tutor_config
 from tutormfe.hooks import MFE_APPS
 
 from .__about__ import __version__
@@ -26,9 +26,10 @@ PANORAMA_MFE_VERSION = 'open-release/redwood.20240729'
 # Tag at https://github.com/aulasneo/panorama-elt.git
 PANORAMA_ELT_VERSION = 'v0.3.2'
 
-# Tag at https://github.com/aulasneo/frontend-component-header-panorama
-PANORAMA_FRONTEND_COMPONENT_HEADER_VERSION = 'panorama/quince/20240809'
-PANORAMA_FRONTEND_COMPONENT_HEADER_REPO = 'github:aulasneo/frontend-component-header-panorama'
+# Tag at https://github.com/aulasneo/frontend-app-learner-dashboard
+PANORAMA_FRONTEND_APP_LEARNER_DASHBOARD_VERSION = 'panorama/redwood/v20250326'
+PANORAMA_FRONTEND_APP_LEARNER_DASHBOARD_REPO = \
+    'https://github.com/aulasneo/frontend-app-learner-dashboard.git'
 
 PANORAMA_MFE_PORT = 2100
 
@@ -57,11 +58,11 @@ config = {
         "LOGS_DOCKER_IMAGE":
             "{{ DOCKER_REGISTRY }}aulasneo/panorama-elt-logs:{{ PANORAMA_VERSION }}",
         "MFE_ENABLED": True,
-        "ADD_HEADER_LINK": False,
+        "ADD_DASHBOARD_LINK": False,
         "MODE": "DEMO",
         "MFE_PORT": PANORAMA_MFE_PORT,
-        "FRONTEND_COMPONENT_HEADER_VERSION": PANORAMA_FRONTEND_COMPONENT_HEADER_VERSION,
-        "FRONTEND_COMPONENT_HEADER_REPO": PANORAMA_FRONTEND_COMPONENT_HEADER_REPO,
+        "FRONTEND_APP_LEARNER_DASHBOARD_VERSION": PANORAMA_FRONTEND_APP_LEARNER_DASHBOARD_VERSION,
+        "FRONTEND_APP_LEARNER_DASHBOARD_REPO": PANORAMA_FRONTEND_APP_LEARNER_DASHBOARD_REPO,
         "ENABLE_STUDENT_VIEW": True,
         "DEFAULT_USER_ARN":
             "arn:aws:quicksight:{{ PANORAMA_REGION }}:{{ PANORAMA_AWS_ACCOUNT_ID }}:"
@@ -217,6 +218,23 @@ def extract_and_load(all_, tables, force, debug) -> list[tuple[str, str]]:
         command.append("--force")
 
     return [('panorama', ' '.join(command))]
+
+@MFE_APPS.add()
+def _use_panorama_learner_dashboard(mfes):
+    current_context = click.get_current_context()
+    root = current_context.params.get('root')
+    if root:
+        configuration = tutor_config.load(root)
+        if configuration['PANORAMA_ADD_DASHBOARD_LINK']:
+            repo = mfes['learner-dashboard']['repository']
+            if (repo !=
+                    'https://github.com/openedx/frontend-app-learner-dashboard.git'):
+                fmt.echo_alert(f"You have a custom learner-dashboard MFE set at {repo}. "
+                               f"Setting PANORAMA_USE_DASHBOARD_LINK to True "
+                               f"will override your custom MFE.")
+            mfes['learner-dashboard']['repository'] = PANORAMA_FRONTEND_APP_LEARNER_DASHBOARD_REPO
+            mfes['learner-dashboard']['version'] = PANORAMA_FRONTEND_APP_LEARNER_DASHBOARD_VERSION
+    return mfes
 
 
 hooks.Filters.CLI_DO_COMMANDS.add_item(extract_and_load)

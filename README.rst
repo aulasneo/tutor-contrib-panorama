@@ -226,7 +226,7 @@ Set the following variables to configure Panorama
     "PANORAMA_BUCKET", "", "S3 bucket to store the raw data"
     "PANORAMA_MODE", "DEMO", "Panorama mode: DEMO, FREE, SAAS, CUSTOM"
     "PANORAMA_MFE_ENABLED", "True", "Enable the Panorama MFE"
-    "PANORAMA_ADD_HEADER_LINK", "False", "Set to True to replace the header of the learning MFE with one that includes a link to Panorama"
+    "PANORAMA_ADD_DASHBOARD_LINK", "False", "Set to True to replace the learner-dashboard MFE with one that includes a link to Panorama"
     "PANORAMA_DEFAULT_USER_ARN", "arn:aws:quicksight:{{ PANORAMA_REGION }}:{{ PANORAMA_AWS_ACCOUNT_ID }}:user/default/{{ LMS_HOST }}", "Quicksight user to map by default"
     "PANORAMA_ENABLE_STUDENT_VIEW", "True", "Allow students to access the student's panel"
     "PANORAMA_MFE_PORT", "2100", "Internal port of the Panorama MFE"

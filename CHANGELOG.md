@@ -1,5 +1,9 @@
 # Change log
 
+## Unreleased
+- Fix: Remove PANORAMA_ADD_HEADER_LINK and replaced by PANORAMA_ADD_DASHBOARD_LINK.
+Now the Panorama link is in the learner-dashboard MFE instead of a header.
+
 ## Version 18.1.4 (2025-02-19)
 - Fix: use panorama-elt version 0.3.2 to fix a crash when a problem is empty.
 
