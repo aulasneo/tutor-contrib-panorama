@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 18.2.1 (2025-03-27)
 - Fead: Add Panorama link to hamburger menu in learner dashboard
 
 ## Version 18.2.0 (2025-03-26)
