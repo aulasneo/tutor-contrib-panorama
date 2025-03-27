@@ -1,5 +1,8 @@
 # Change log
 
+## Unreleased
+- Fead: Add Panorama link to hamburger menu in learner dashboard
+
 ## Version 18.2.0 (2025-03-26)
 - Fix: Remove PANORAMA_ADD_HEADER_LINK and replaced by PANORAMA_ADD_DASHBOARD_LINK.
 Now the Panorama link is in the learner-dashboard MFE instead of a header.
