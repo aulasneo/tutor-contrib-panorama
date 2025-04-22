@@ -1,7 +1,12 @@
 # Change log
 
+## Unreleased
+- Feat: Set K8s memory resources with PANORAMA_K8S_JOB_MEMORY_REQUEST and PANORAMA_K8S_JOB_MEMORY_LIMIT. 
+  This replaces PANORAMA_K8S_JOB_MEMORY
+- Fix: Improve MFE management. Prevent errors when commands are run out of the root directory.
+
 ## Version 18.2.1 (2025-03-27)
-- Fead: Add Panorama link to hamburger menu in learner dashboard
+- Feat: Add Panorama link to hamburger menu in learner dashboard
 
 ## Version 18.2.0 (2025-03-26)
 - Fix: Remove PANORAMA_ADD_HEADER_LINK and replaced by PANORAMA_ADD_DASHBOARD_LINK.

@@ -67,6 +67,8 @@ config = {
         "DEFAULT_USER_ARN":
             "arn:aws:quicksight:{{ PANORAMA_REGION }}:{{ PANORAMA_AWS_ACCOUNT_ID }}:"
             "user/default/{{ LMS_HOST }}",
+        "K8S_JOB_MEMORY_REQUEST": None,
+        "K8S_JOB_MEMORY_LIMIT": None,
     },
     # Add here settings that don't have a reasonable default for all users. For
     # instance: passwords, secret keys, etc.
@@ -155,19 +157,6 @@ hooks.Filters.ENV_TEMPLATE_TARGETS.add_items(
 )
 
 
-@MFE_APPS.add()
-def _add_my_mfe(mfes):
-    conf = tutor_config.load('')
-
-    if conf.get("PANORAMA_MFE_ENABLED"):
-        mfes["panorama"] = {
-            "repository": PANORAMA_MFE_REPO,
-            "port": PANORAMA_MFE_PORT,
-            "version": PANORAMA_MFE_VERSION
-        }
-    return mfes
-
-
 # Load patches from files
 for path in glob(str(importlib_resources.files("tutorpanorama") / "patches" / "*")):
     with open(path, encoding="utf-8") as patch_file:
@@ -219,13 +208,22 @@ def extract_and_load(all_, tables, force, debug) -> list[tuple[str, str]]:
 
     return [('panorama', ' '.join(command))]
 
+
 @MFE_APPS.add()
-def _use_panorama_learner_dashboard(mfes):
+def _add_panorama_mfes(mfes):
     current_context = click.get_current_context()
     root = current_context.params.get('root')
     if root:
         configuration = tutor_config.load(root)
-        if configuration['PANORAMA_ADD_DASHBOARD_LINK']:
+        # Add Panorama MFE
+        if configuration.get("PANORAMA_MFE_ENABLED"):
+            mfes["panorama"] = {
+                "repository": PANORAMA_MFE_REPO,
+                "port": PANORAMA_MFE_PORT,
+                "version": PANORAMA_MFE_VERSION
+            }
+        # Add custom lerarner dashboard with Panorama link
+        if configuration.get('PANORAMA_ADD_DASHBOARD_LINK'):
             repo = mfes['learner-dashboard']['repository']
             if (repo !=
                     'https://github.com/openedx/frontend-app-learner-dashboard.git'):
@@ -234,6 +232,7 @@ def _use_panorama_learner_dashboard(mfes):
                                f"will override your custom MFE.")
             mfes['learner-dashboard']['repository'] = PANORAMA_FRONTEND_APP_LEARNER_DASHBOARD_REPO
             mfes['learner-dashboard']['version'] = PANORAMA_FRONTEND_APP_LEARNER_DASHBOARD_VERSION
+
     return mfes
 
 
