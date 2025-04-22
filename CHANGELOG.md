@@ -1,9 +1,10 @@
 # Change log
 
-## Unreleased
+## Unreleased (2025-04-22)
 - Feat: Set K8s memory resources with PANORAMA_K8S_JOB_MEMORY_REQUEST and PANORAMA_K8S_JOB_MEMORY_LIMIT. 
   This replaces PANORAMA_K8S_JOB_MEMORY
 - Fix: Improve MFE management. Prevent errors when commands are run out of the root directory.
+- Chore: Update for Sumac
 
 ## Version 18.2.1 (2025-03-27)
 - Feat: Add Panorama link to hamburger menu in learner dashboard
