@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased (2025-04-22)
+## Version 19.0.0 (2025-04-23) (2025-04-22)
 - Feat: Set K8s memory resources with PANORAMA_K8S_JOB_MEMORY_REQUEST and PANORAMA_K8S_JOB_MEMORY_LIMIT. 
   This replaces PANORAMA_K8S_JOB_MEMORY
 - Fix: Improve MFE management. Prevent errors when commands are run out of the root directory.
