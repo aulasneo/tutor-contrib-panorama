@@ -1,5 +1,8 @@
 # Change log
 
+## Unreleased
+- Fix: Add submissions tables to openedx_mysql datasource
+
 ## Version 19.0.0 (2025-04-23) (2025-04-22)
 - Feat: Set K8s memory resources with PANORAMA_K8S_JOB_MEMORY_REQUEST and PANORAMA_K8S_JOB_MEMORY_LIMIT. 
   This replaces PANORAMA_K8S_JOB_MEMORY

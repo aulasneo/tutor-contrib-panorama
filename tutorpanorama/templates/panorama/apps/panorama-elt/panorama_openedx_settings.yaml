@@ -66,6 +66,100 @@ datasources:
   mysql_host: {{ MYSQL_HOST }}
   mysql_database: {{ OPENEDX_MYSQL_DATABASE }}
   tables:
+  - name: submissions_score
+    fields:
+    - name: id
+      type: int
+    - name: points_earned
+      type: int
+    - name: points_possible
+      type: int
+    - name: created_at
+      type: datetime
+    - name: reset
+      type: tinyint
+    - name: student_item_id
+      type: int
+    - name: submission_id
+      type: int
+  - name: submissions_scoreannotation
+    fields:
+    - name: id
+      type: int
+    - name: annotation_type
+      type: varchar
+    - name: creator
+      type: varchar
+    - name: reason
+      type: longtext
+    - name: score_id
+      type: int
+  - name: submissions_scoresummary
+    fields:
+    - name: id
+      type: int
+    - name: highest_id
+      type: int
+    - name: latest_id
+      type: int
+    - name: student_item_id
+      type: int
+  - name: submissions_studentitem
+    fields:
+    - name: id
+      type: int
+    - name: student_id
+      type: varchar
+    - name: course_id
+      type: varchar
+    - name: item_id
+      type: varchar
+    - name: item_type
+      type: varchar
+  - name: submissions_submission
+    fields:
+    - name: id
+      type: int
+    - name: uuid
+      type: char
+    - name: attempt_number
+      type: int
+    - name: submitted_at
+      type: datetime
+    - name: created_at
+      type: datetime
+    - name: raw_answer
+      type: longtext
+    - name: student_item_id
+      type: int
+    - name: status
+      type: varchar
+    - name: team_submission_id
+      type: int
+  - name: submissions_teamsubmission
+    fields:
+    - name: id
+      type: int
+    - name: created
+      type: datetime
+    - name: modified
+      type: datetime
+    - name: uuid
+      type: char
+    - name: attempt_number
+      type: int
+    - name: submitted_at
+      type: datetime
+    - name: course_id
+      type: varchar
+    - name: item_id
+      type: varchar
+    - name: team_id
+      type: varchar
+    - name: status
+      type: varchar
+    - name: submitted_by_id
+      type: int
   - name: student_anonymoususerid
     fields:
     - name: id
