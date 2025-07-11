@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 19.1.0 (2025-07-11)
 - Fix: Add submissions tables to openedx_mysql datasource
 
 ## Version 19.0.0 (2025-04-23) (2025-04-22)
