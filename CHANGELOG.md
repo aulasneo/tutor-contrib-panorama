@@ -1,5 +1,8 @@
 # Change log
 
+## Unreleased
+- Update MFE version to open-release/sumac/v20251202. Fix author view in custom mode.
+
 ## Version 19.1.0 (2025-07-11)
 - Fix: Add submissions tables to openedx_mysql datasource
 
