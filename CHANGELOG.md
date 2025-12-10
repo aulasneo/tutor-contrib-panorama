@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 19.1.1 (2025-12-10)
 - Update MFE version to open-release/sumac/v20251202. Fix author view in custom mode.
 
 ## Version 19.1.0 (2025-07-11)
