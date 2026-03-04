@@ -1,5 +1,9 @@
 # Change log
 
+## Unreleased
+- Use openedx-backend-version 16.0.14 (use default ARN if not specified for usesr in custom mode)
+- Use frontend-app-learner-dashboard panorama/sumac/v20260304 (remove isActive from Panorama menu)
+
 ## Version 19.1.1 (2025-12-10)
 - Update MFE version to open-release/sumac/v20251202. Fix author view in custom mode.
 
