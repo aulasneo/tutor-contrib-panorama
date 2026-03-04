@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 19.1.2 (2026-03-04)
 - Use openedx-backend-version 16.0.14 (use default ARN if not specified for usesr in custom mode)
 - Use frontend-app-learner-dashboard panorama/sumac/v20260304 (remove isActive from Panorama menu)
 
