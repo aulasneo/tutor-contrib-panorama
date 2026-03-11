@@ -9,8 +9,8 @@ import os
 import click
 import importlib_resources
 
-from tutor import fmt, hooks, config as tutor_config
-from tutormfe.hooks import MFE_APPS
+from tutor import hooks, config as tutor_config
+from tutormfe.hooks import MFE_APPS, PLUGIN_SLOTS
 
 from .__about__ import __version__
 
@@ -25,11 +25,6 @@ PANORAMA_MFE_VERSION = 'open-release/sumac/v20251202'
 
 # Tag at https://github.com/aulasneo/panorama-elt.git
 PANORAMA_ELT_VERSION = 'v0.3.2'
-
-# Tag at https://github.com/aulasneo/frontend-app-learner-dashboard
-PANORAMA_FRONTEND_APP_LEARNER_DASHBOARD_VERSION = 'panorama/sumac/v20260304'
-PANORAMA_FRONTEND_APP_LEARNER_DASHBOARD_REPO = \
-    'https://github.com/aulasneo/frontend-app-learner-dashboard.git'
 
 PANORAMA_MFE_PORT = 2100
 
@@ -58,11 +53,8 @@ config = {
         "LOGS_DOCKER_IMAGE":
             "{{ DOCKER_REGISTRY }}aulasneo/panorama-elt-logs:{{ PANORAMA_VERSION }}",
         "MFE_ENABLED": True,
-        "ADD_DASHBOARD_LINK": False,
         "MODE": "DEMO",
         "MFE_PORT": PANORAMA_MFE_PORT,
-        "FRONTEND_APP_LEARNER_DASHBOARD_VERSION": PANORAMA_FRONTEND_APP_LEARNER_DASHBOARD_VERSION,
-        "FRONTEND_APP_LEARNER_DASHBOARD_REPO": PANORAMA_FRONTEND_APP_LEARNER_DASHBOARD_REPO,
         "ENABLE_STUDENT_VIEW": True,
         "DEFAULT_USER_ARN":
             "arn:aws:quicksight:{{ PANORAMA_REGION }}:{{ PANORAMA_AWS_ACCOUNT_ID }}:"
@@ -162,6 +154,13 @@ for path in glob(str(importlib_resources.files("tutorpanorama") / "patches" / "*
     with open(path, encoding="utf-8") as patch_file:
         hooks.Filters.ENV_PATCHES.add_item((os.path.basename(path), patch_file.read()))
 
+# Load plugin slot configs from files
+for path in glob(str(importlib_resources.files("tutorpanorama") / "plugin_slots" / "*" / "*")):
+    with open(path, encoding="utf-8") as slot_file:
+        mfe_name = os.path.basename(os.path.dirname(path))
+        slot_name = os.path.basename(path)
+        PLUGIN_SLOTS.add_item((mfe_name, slot_name, slot_file.read()))
+
 hooks.Filters.ENV_TEMPLATE_VARIABLES.add_items(
     [
         ('PANORAMA_OPENEDX_BACKEND_VERSION', PANORAMA_OPENEDX_BACKEND_VERSION),
@@ -211,27 +210,11 @@ def extract_and_load(all_, tables, force, debug) -> list[tuple[str, str]]:
 
 @MFE_APPS.add()
 def _add_panorama_mfes(mfes):
-    current_context = click.get_current_context()
-    root = current_context.params.get('root')
-    if root:
-        configuration = tutor_config.load(root)
-        # Add Panorama MFE
-        if configuration.get("PANORAMA_MFE_ENABLED"):
-            mfes["panorama"] = {
-                "repository": PANORAMA_MFE_REPO,
-                "port": PANORAMA_MFE_PORT,
-                "version": PANORAMA_MFE_VERSION
-            }
-        # Add custom lerarner dashboard with Panorama link
-        if configuration.get('PANORAMA_ADD_DASHBOARD_LINK'):
-            repo = mfes['learner-dashboard']['repository']
-            if (repo !=
-                    'https://github.com/openedx/frontend-app-learner-dashboard.git'):
-                fmt.echo_alert(f"You have a custom learner-dashboard MFE set at {repo}. "
-                               f"Setting PANORAMA_USE_DASHBOARD_LINK to True "
-                               f"will override your custom MFE.")
-            mfes['learner-dashboard']['repository'] = PANORAMA_FRONTEND_APP_LEARNER_DASHBOARD_REPO
-            mfes['learner-dashboard']['version'] = PANORAMA_FRONTEND_APP_LEARNER_DASHBOARD_VERSION
+    mfes["panorama"] = {
+        "repository": PANORAMA_MFE_REPO,
+        "port": PANORAMA_MFE_PORT,
+        "version": PANORAMA_MFE_VERSION
+    }
 
     return mfes
 
