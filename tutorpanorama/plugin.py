@@ -47,8 +47,9 @@ config = {
         "USE_SPLIT_MONGO": True,
         "RUN_K8S_FLUENTBIT": True,
         "DEBUG": False,
-        "LOGS_TOTAL_FILE_SIZE": "1M",
-        "LOGS_UPLOAD_TIMEOUT": "15m",
+        "LOGS_TOTAL_FILE_SIZE": "50M",
+        "LOGS_UPLOAD_TIMEOUT": "10m",
+        "LOGS_UPLOAD_CHUNK_SIZE": "10M",
         "DOCKER_IMAGE": "{{ DOCKER_REGISTRY }}aulasneo/panorama-elt:{{ PANORAMA_VERSION }}",
         "LOGS_DOCKER_IMAGE":
             "{{ DOCKER_REGISTRY }}aulasneo/panorama-elt-logs:{{ PANORAMA_VERSION }}",
