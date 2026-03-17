@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 20.0.0 (2026-03-17)
 
 - Feat: Optimize Fluent Bit log file batching to reduce S3 file count
   - Updated `PANORAMA_LOGS_TOTAL_FILE_SIZE` default from `1M` to `50M`
