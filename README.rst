@@ -226,7 +226,6 @@ Set the following variables to configure Panorama
     "PANORAMA_BUCKET", "", "S3 bucket to store the raw data"
     "PANORAMA_MODE", "DEMO", "Panorama mode: DEMO, FREE, SAAS, CUSTOM"
     "PANORAMA_MFE_ENABLED", "True", "Enable the Panorama MFE"
-    "PANORAMA_ADD_DASHBOARD_LINK", "False", "Set to True to replace the learner-dashboard MFE with one that includes a link to Panorama"
     "PANORAMA_DEFAULT_USER_ARN", "arn:aws:quicksight:{{ PANORAMA_REGION }}:{{ PANORAMA_AWS_ACCOUNT_ID }}:user/default/{{ LMS_HOST }}", "Quicksight user to map by default"
     "PANORAMA_ENABLE_STUDENT_VIEW", "True", "Allow students to access the student's panel"
     "PANORAMA_MFE_PORT", "2100", "Internal port of the Panorama MFE"
@@ -242,8 +241,9 @@ Set the following variables to configure Panorama
     "PANORAMA_FLB_LOG_LEVEL", "info", "Set the Fluentbit logging level"
     "PANORAMA_RUN_K8S_FLUENTBIT", "True", "In K8s deployments set to false to disable the Fluentbit daemonset. Leave only one namespace running Fluentbit"
     "PANORAMA_DEBUG", "False", "Set to true to run Panorama ELT in verbose debug mode"
-    "PANORAMA_LOGS_TOTAL_FILE_SIZE", "1M", "Change the size of the logfiles before uploading"
-    "PANORAMA_LOGS_UPLOAD_TIMEOUT", "15m", "Time before log files are uploaded even if they don't have the size limit"
+    "PANORAMA_LOGS_TOTAL_FILE_SIZE", "50M", "Maximum size of log files before uploading to S3"
+    "PANORAMA_LOGS_UPLOAD_TIMEOUT", "10m", "Maximum time before log files are uploaded even if they don't reach the size limit"
+    "PANORAMA_LOGS_UPLOAD_CHUNK_SIZE", "10M", "Chunk size for multipart uploads to S3"
     "PANORAMA_K8S_JOB_MEMORY", "", "Memory request for Panorama job in K8s. Use only if you get OOM killed pods."
 
 

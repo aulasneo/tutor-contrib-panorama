@@ -1,0 +1,1 @@
+import { getConfig } from '@edx/frontend-platform';
