@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from glob import glob
 import os
+from typing import Any
 
 import click
 import importlib_resources
@@ -16,15 +17,15 @@ from .__about__ import __version__
 
 # Version of openedx-backend-version in PyPI
 
-PANORAMA_OPENEDX_BACKEND_VERSION = '20.0.0'
+PANORAMA_OPENEDX_BACKEND_VERSION = "20.0.1"
 
 PANORAMA_MFE_REPO = "https://github.com/aulasneo/frontend-app-panorama.git"
 
 # Tag at https://github.com/aulasneo/frontend-app-panorama.git
-PANORAMA_MFE_VERSION = 'open-release/teak/v202603180241'
+PANORAMA_MFE_VERSION = "open-release/teak/v202603241858"
 
 # Tag at https://github.com/aulasneo/panorama-elt.git
-PANORAMA_ELT_VERSION = 'v0.3.2'
+PANORAMA_ELT_VERSION = "v0.3.2"
 
 PANORAMA_MFE_PORT = 2100
 
@@ -43,7 +44,7 @@ config = {
         "DATALAKE_WORKGROUP": "panorama",
         "AWS_ACCESS_KEY": "{{ OPENEDX_AWS_ACCESS_KEY }}",
         "AWS_SECRET_ACCESS_KEY": "{{ OPENEDX_AWS_SECRET_ACCESS_KEY }}",
-        "FLB_LOG_LEVEL": 'info',
+        "FLB_LOG_LEVEL": "info",
         "USE_SPLIT_MONGO": True,
         "RUN_K8S_FLUENTBIT": True,
         "DEBUG": False,
@@ -51,25 +52,21 @@ config = {
         "LOGS_UPLOAD_TIMEOUT": "10m",
         "LOGS_UPLOAD_CHUNK_SIZE": "10M",
         "DOCKER_IMAGE": "{{ DOCKER_REGISTRY }}aulasneo/panorama-elt:{{ PANORAMA_VERSION }}",
-        "LOGS_DOCKER_IMAGE":
-            "{{ DOCKER_REGISTRY }}aulasneo/panorama-elt-logs:{{ PANORAMA_VERSION }}",
+        "LOGS_DOCKER_IMAGE": "{{ DOCKER_REGISTRY }}aulasneo/panorama-elt-logs:{{ PANORAMA_VERSION }}",
         "MFE_ENABLED": True,
         "MODE": "DEMO",
         "MFE_PORT": PANORAMA_MFE_PORT,
         "ENABLE_STUDENT_VIEW": True,
-        "DEFAULT_USER_ARN":
-            "arn:aws:quicksight:{{ PANORAMA_REGION }}:{{ PANORAMA_AWS_ACCOUNT_ID }}:"
-            "user/default/{{ LMS_HOST }}",
+        "DEFAULT_USER_ARN": "arn:aws:quicksight:{{ PANORAMA_REGION }}:{{ PANORAMA_AWS_ACCOUNT_ID }}:"
+        "user/default/{{ LMS_HOST }}",
         "K8S_JOB_MEMORY_REQUEST": None,
         "K8S_JOB_MEMORY_LIMIT": None,
     },
     # Add here settings that don't have a reasonable default for all users. For
     # instance: passwords, secret keys, etc.
-    "unique": {
-    },
+    "unique": {},
     # Danger zone! Add here values to override settings from Tutor core or other plugins.
-    "overrides": {
-    },
+    "overrides": {},
 }
 
 # Initialization tasks
@@ -81,25 +78,27 @@ MY_INIT_TASKS: list[tuple[str, str, int]] = [
 # init script
 for service, template_path, priority in MY_INIT_TASKS:
     with open(
-            str(importlib_resources.files(
-                "tutorpanorama") / "templates" / "panorama" / "tasks" / template_path / "init"),
-            encoding="utf-8",
+        str(
+            importlib_resources.files("tutorpanorama")
+            / "templates"
+            / "panorama"
+            / "tasks"
+            / template_path
+            / "init"
+        ),
+        encoding="utf-8",
     ) as task_file:
-        hooks.Filters.CLI_DO_INIT_TASKS.add_item((service, task_file.read()), priority=priority)
+        hooks.Filters.CLI_DO_INIT_TASKS.add_item(
+            (service, task_file.read()), priority=priority
+        )
 
 
 # Load all configuration entries
 hooks.Filters.CONFIG_DEFAULTS.add_items(
-    [
-        (f"PANORAMA_{key}", value)
-        for key, value in config["defaults"].items()
-    ]
+    [(f"PANORAMA_{key}", value) for key, value in config["defaults"].items()]
 )
 hooks.Filters.CONFIG_UNIQUE.add_items(
-    [
-        (f"PANORAMA_{key}", value)
-        for key, value in config["unique"].items()
-    ]
+    [(f"PANORAMA_{key}", value) for key, value in config["unique"].items()]
 )
 
 hooks.Filters.CONFIG_OVERRIDES.add_items(list(config["overrides"].items()))
@@ -126,13 +125,19 @@ hooks.Filters.IMAGES_BUILD.add_items(
 # To pull/push an image with `tutor images pull myimage` and `tutor images push myimage`:
 hooks.Filters.IMAGES_PULL.add_items(
     [
-        ("panorama", "{{ PANORAMA_DOCKER_IMAGE }}",),
+        (
+            "panorama",
+            "{{ PANORAMA_DOCKER_IMAGE }}",
+        ),
         ("panorama", "{{ PANORAMA_LOGS_DOCKER_IMAGE }}"),
     ]
 )
 hooks.Filters.IMAGES_PUSH.add_items(
     [
-        ("panorama", "{{ PANORAMA_DOCKER_IMAGE }}",),
+        (
+            "panorama",
+            "{{ PANORAMA_DOCKER_IMAGE }}",
+        ),
         ("panorama", "{{ PANORAMA_LOGS_DOCKER_IMAGE }}"),
     ]
 )
@@ -156,7 +161,9 @@ for path in glob(str(importlib_resources.files("tutorpanorama") / "patches" / "*
         hooks.Filters.ENV_PATCHES.add_item((os.path.basename(path), patch_file.read()))
 
 # Load plugin slot configs from files
-for path in glob(str(importlib_resources.files("tutorpanorama") / "plugin_slots" / "*" / "*")):
+for path in glob(
+    str(importlib_resources.files("tutorpanorama") / "plugin_slots" / "*" / "*")
+):
     with open(path, encoding="utf-8") as slot_file:
         mfe_name = os.path.basename(os.path.dirname(path))
         slot_name = os.path.basename(path)
@@ -164,57 +171,77 @@ for path in glob(str(importlib_resources.files("tutorpanorama") / "plugin_slots"
 
 hooks.Filters.ENV_TEMPLATE_VARIABLES.add_items(
     [
-        ('PANORAMA_OPENEDX_BACKEND_VERSION', PANORAMA_OPENEDX_BACKEND_VERSION),
-        ('PANORAMA_ELT_VERSION', PANORAMA_ELT_VERSION),
+        ("PANORAMA_OPENEDX_BACKEND_VERSION", PANORAMA_OPENEDX_BACKEND_VERSION),
+        ("PANORAMA_ELT_VERSION", PANORAMA_ELT_VERSION),
     ]
 )
 
 
 # Commands
 @click.command()
-@click.option("--all", "-a", "all_", is_flag=True, default=False,
-              help="Panorama: Extract and load all tables of all datasource")
-@click.option("--tables", "-t", required=False, default=None,
-              help="Comma separated list of tables to extract and load")
-@click.option('--force', is_flag=True, default=False,
-              help='Force upload all partitions. False by default')
+@click.option(
+    "--all",
+    "-a",
+    "all_",
+    is_flag=True,
+    default=False,
+    help="Panorama: Extract and load all tables of all datasource",
+)
+@click.option(
+    "--tables",
+    "-t",
+    required=False,
+    default=None,
+    help="Comma separated list of tables to extract and load",
+)
+@click.option(
+    "--force",
+    is_flag=True,
+    default=False,
+    help="Force upload all partitions. False by default",
+)
 @click.option("--debug", is_flag=True, default=False, help="Enable debugging")
-def extract_and_load(all_, tables, force, debug) -> list[tuple[str, str]]:
+def extract_and_load(
+    all_: bool,
+    tables: str | None,
+    force: bool,
+    debug: bool,
+) -> list[tuple[str, str]]:
     """
     Extract and load all, or a specific tablename
     """
 
     command = [
-        '/usr/local/bin/python /panorama-elt/panorama.py',
-        '--settings /config/panorama_openedx_settings.yaml',
+        "/usr/local/bin/python /panorama-elt/panorama.py",
+        "--settings /config/panorama_openedx_settings.yaml",
     ]
 
     if debug:
-        command.append('--debug')
+        command.append("--debug")
 
-    command.append('extract-and-load')
+    command.append("extract-and-load")
 
     if all_:
         if tables:
             raise click.BadParameter("--all and --table cannot be used together")
-        command.append('--all')
+        command.append("--all")
     else:
         if not tables:
             raise click.BadParameter("Define either --all or --tables")
-        command.append(f'--tables {tables}')
+        command.append(f"--tables {tables}")
 
     if force:
         command.append("--force")
 
-    return [('panorama', ' '.join(command))]
+    return [("panorama", " ".join(command))]
 
 
-@MFE_APPS.add()
-def _add_panorama_mfes(mfes):
+@MFE_APPS.add()  # type: ignore[untyped-decorator]
+def _add_panorama_mfes(mfes: dict[str, Any]) -> dict[str, Any]:
     mfes["panorama"] = {
         "repository": PANORAMA_MFE_REPO,
         "port": PANORAMA_MFE_PORT,
-        "version": PANORAMA_MFE_VERSION
+        "version": PANORAMA_MFE_VERSION,
     }
 
     return mfes

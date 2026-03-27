@@ -1,2 +1,3 @@
 recursive-include tutorpanorama/patches *
+recursive-include tutorpanorama/plugin_slots *
 recursive-include tutorpanorama/templates *

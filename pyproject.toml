@@ -1,0 +1,46 @@
+[project]
+name = "tutor-contrib-panorama"
+description = "Tutor plugin for Panorama Analytics"
+authors = [
+  { name = "Aulasneo", email = "andres@aulasneo.com" },
+]
+license = { text = "AGPLv3" }
+license-files = []
+readme = { file = "README.rst", content-type = "text/x-rst" }
+requires-python = ">=3.11"
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: System Administrators",
+  "License :: OSI Approved :: GNU Affero General Public License v3",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+  "tutor>=20.0.0,<21.0.0",
+  "tutor-mfe>=20.0.0,<21.0.0",
+]
+dynamic = ["version"]
+
+[project.urls]
+Code = "https://github.com/aulasneo/tutor-contrib-panorama"
+Issues = "https://github.com/aulasneo/tutor-contrib-panorama/issues"
+
+[project.entry-points."tutor.plugin.v1"]
+panorama = "tutorpanorama.plugin"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "tutorpanorama/__about__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["tutorpanorama"]
+
+[tool.hatch.build.targets.sdist]
+strict-naming = false
+include = ["/tutorpanorama", "/README.rst", "/LICENSE", "/CHANGELOG.md"]
+exclude = ["tests*"]
