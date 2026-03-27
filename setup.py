@@ -44,16 +44,18 @@ setup(
         "Issue tracker": "https://github.com/aulasneo/tutor-contrib-panorama/issues",
     },
     license="AGPLv3",
-    author="Aulsneo",
-    maintainer="Aulasneo",
+    author="Aulasneo",
     author_email="andres@aulasneo.com",
     description="Tutor plugin for Panorama Analytics",
     long_description=load_readme(),
-    long_description_content_type='text/x-rst',
+    long_description_content_type="text/x-rst",
     packages=find_packages(exclude=["tests*"]),
     include_package_data=True,
-    python_requires=">=3.7",
-    install_requires=["tutor>=20.0.0,<21.0.0"],
+    python_requires=">=3.11",
+    install_requires=[
+        "tutor>=20.0.0,<21.0.0",
+        "tutor-mfe>=20.0.0,<21.0.0",
+    ],
     entry_points={
         "tutor.plugin.v1": [
             "panorama = tutorpanorama.plugin"
@@ -65,9 +67,7 @@ setup(
         "License :: OSI Approved :: GNU Affero General Public License v3",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
 )
