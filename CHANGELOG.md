@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 20.0.3 (2026-03-30)
 
 - chore: upgrade backend to 20.0.3
 
