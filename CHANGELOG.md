@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 20.0.1 (2026-03-30)
 
 - feat: add local development automation with a `Makefile` and pinned dev requirements
 - feat: add GitHub Actions test and publish workflows aligned with the current plugin maintenance flow
