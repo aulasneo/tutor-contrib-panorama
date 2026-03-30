@@ -1,6 +1,7 @@
 """
 Tutor plugin to enable Panorama in Open edX.
 """
+
 from __future__ import annotations
 
 from glob import glob
