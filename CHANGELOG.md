@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 20.0.4 (2026-03-31)
 
 - chore: after a tagged release, build the Tutor `panorama` image in GitHub Actions and push it to Docker Hub after `tutor config save`
 - chore: upgrade backend to 20.0.4
