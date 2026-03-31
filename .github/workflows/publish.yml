@@ -100,3 +100,47 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         print-hash: true
+
+  publish-panorama-image:
+    name: Build and publish Panorama image
+    runs-on: ubuntu-latest
+    needs: [release-eligibility, publish]
+    if: needs.release-eligibility.outputs.on_main == 'true'
+    permissions:
+      contents: read
+    env:
+      TUTOR_ROOT: ${{ github.workspace }}/.tutor
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v5
+
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.11'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: '20'
+
+    - name: Install Tutor and plugin dependencies
+      run: make requirements
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Generate Tutor environment
+      run: |
+        tutor plugins enable mfe panorama
+        tutor config save
+
+    - name: Build Panorama image
+      run: tutor images build panorama
+
+    - name: Push Panorama image
+      run: tutor images push panorama
