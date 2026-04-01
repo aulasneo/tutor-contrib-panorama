@@ -18,8 +18,8 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-  "tutor>=20.0.0,<21.0.0",
-  "tutor-mfe>=20.0.0,<21.0.0",
+  "tutor>=21.0.0,<22.0.0",
+  "tutor-mfe>=21.0.0,<22.0.0",
 ]
 dynamic = ["version"]
 

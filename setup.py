@@ -53,8 +53,8 @@ setup(
     include_package_data=True,
     python_requires=">=3.11",
     install_requires=[
-        "tutor>=20.0.0,<21.0.0",
-        "tutor-mfe>=20.0.0,<21.0.0",
+        "tutor>=21.0.0,<22.0.0",
+        "tutor-mfe>=21.0.0,<22.0.0",
     ],
     entry_points={
         "tutor.plugin.v1": [
