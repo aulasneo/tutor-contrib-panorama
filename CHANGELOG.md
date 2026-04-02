@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 20.0.5 (2026-04-02)
 
 - chore: upgrade Panorama MFE to open-release/teak/v20260401
 
