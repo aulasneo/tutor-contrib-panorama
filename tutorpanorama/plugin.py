@@ -23,7 +23,7 @@ PANORAMA_OPENEDX_BACKEND_VERSION = "20.0.4"
 PANORAMA_MFE_REPO = "https://github.com/aulasneo/frontend-app-panorama.git"
 
 # Tag at https://github.com/aulasneo/frontend-app-panorama.git
-PANORAMA_MFE_VERSION = "open-release/teak/v202603241858"
+PANORAMA_MFE_VERSION = "open-release/teak/v20260401"
 
 # Tag at https://github.com/aulasneo/panorama-elt.git
 PANORAMA_ELT_VERSION = "v0.3.2"

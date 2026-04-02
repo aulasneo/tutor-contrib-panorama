@@ -1,5 +1,9 @@
 # Change log
 
+## Unreleased
+
+- chore: upgrade Panorama MFE to open-release/teak/v20260401
+
 ## Version 20.0.4 (2026-03-31)
 
 - chore: after a tagged release, build the Tutor `panorama` image in GitHub Actions and push it to Docker Hub after `tutor config save`
