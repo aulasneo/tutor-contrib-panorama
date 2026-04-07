@@ -13,7 +13,7 @@ def load_readme():
     Load readme file.
     :return:
     """
-    with io.open(os.path.join(HERE, "README.rst"), "rt", encoding="utf8") as f:
+    with io.open(os.path.join(HERE, "README.md"), "rt", encoding="utf8") as f:
         return f.read()
 
 
@@ -48,13 +48,13 @@ setup(
     author_email="andres@aulasneo.com",
     description="Tutor plugin for Panorama Analytics",
     long_description=load_readme(),
-    long_description_content_type="text/x-rst",
+    long_description_content_type="text/markdown",
     packages=find_packages(exclude=["tests*"]),
     include_package_data=True,
     python_requires=">=3.11",
     install_requires=[
-        "tutor>=20.0.0,<21.0.0",
-        "tutor-mfe>=20.0.0,<21.0.0",
+        "tutor>=21.0.0,<22.0.0",
+        "tutor-mfe>=21.0.0,<22.0.0",
     ],
     entry_points={
         "tutor.plugin.v1": [

@@ -1,5 +1,11 @@
 # Change log
 
+## Unreleased
+
+- chore: upgrade Tutor compatibility to `21.x`
+- chore: upgrade Panorama backend and MFE git tags for the Ulmo
+- chore: update development requirements to Tutor `21.0.2` and Tutor MFE `21.0.0`
+
 ## Version 20.0.5 (2026-04-02)
 
 - chore: upgrade Panorama MFE to open-release/teak/v20260401
