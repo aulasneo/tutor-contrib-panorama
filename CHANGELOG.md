@@ -1,9 +1,9 @@
 # Change log
 
-## Version 21.0.0 (2026-04-01)
+## Unreleased
 
 - chore: upgrade Tutor compatibility to `21.x`
-- chore: use temporary Panorama backend and MFE git tags for the Ulmo rollout
+- chore: upgrade Panorama backend and MFE git tags for the Ulmo
 - chore: update development requirements to Tutor `21.0.2` and Tutor MFE `21.0.0`
 
 ## Version 20.0.5 (2026-04-02)
