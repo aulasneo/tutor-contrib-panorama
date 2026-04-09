@@ -1,12 +1,19 @@
 function addPanoramaMenuItem(widget) {
-  const existingMenu = widget.RenderWidget.props.menu || [];
+  const widgetProps = widget.RenderWidget.props || {};
+  const menuKey = Array.isArray(widgetProps.mainMenu) ? 'mainMenu' : 'menu';
+  const existingMenu = widgetProps[menuKey] || [];
   const panoramaHref = getConfig().PANORAMA_URL;
+  const isAuthenticated = Boolean(widgetProps.authenticatedUser);
 
-  if (!panoramaHref || existingMenu.some((item) => item.href === panoramaHref)) {
+  if (
+    !isAuthenticated
+    || !panoramaHref
+    || existingMenu.some((item) => item.href === panoramaHref)
+  ) {
     return widget;
   }
 
-  widget.content.menu = [
+  widget.content[menuKey] = [
     ...existingMenu,
     {
       type: 'item',

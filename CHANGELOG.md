@@ -1,5 +1,9 @@
 # Change log
 
+## Unreleased
+
+- Remove Panorama menu from non authenticated MFEs (especially catalog)
+
 ## Version 21.0.0 (2026-04-07)
 
 - chore: upgrade Tutor compatibility to `21.x`
