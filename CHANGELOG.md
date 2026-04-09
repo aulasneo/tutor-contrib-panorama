@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 21.0.1 (2026-04-09)
 
 - Remove Panorama menu from non authenticated MFEs (especially catalog)
 
