@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 21.1.1 (2026-04-21)
 
 - Use secondary menu in learner dashboard
 
