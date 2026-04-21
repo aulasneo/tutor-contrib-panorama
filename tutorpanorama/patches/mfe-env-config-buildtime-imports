@@ -1,1 +1,2 @@
+import { createElement } from 'react';
 import { getConfig } from '@edx/frontend-platform';

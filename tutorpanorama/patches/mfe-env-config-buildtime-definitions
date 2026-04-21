@@ -28,11 +28,7 @@ function renderPanoramaSecondaryMenuItem() {
     return null;
   }
 
-  return (
-    <a className="nav-link" href={panoramaHref}>
-      Panorama
-    </a>
-  );
+  return createElement('a', { className: 'nav-link', href: panoramaHref }, 'Panorama');
 }
 
 function renderPanoramaLearningActionLink() {
@@ -41,11 +37,7 @@ function renderPanoramaLearningActionLink() {
     return null;
   }
 
-  return (
-    <a className="text-gray-700" href={panoramaHref}>
-      Panorama
-    </a>
-  );
+  return createElement('a', { className: 'text-gray-700', href: panoramaHref }, 'Panorama');
 }
 
 function renderPanoramaStudioActionLink() {
@@ -54,9 +46,5 @@ function renderPanoramaStudioActionLink() {
     return null;
   }
 
-  return (
-    <a className="btn btn-link" href={panoramaHref}>
-      Panorama
-    </a>
-  );
+  return createElement('a', { className: 'btn btn-link', href: panoramaHref }, 'Panorama');
 }
