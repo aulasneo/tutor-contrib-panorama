@@ -28,9 +28,5 @@ function renderPanoramaSecondaryMenuItem() {
     return null;
   }
 
-  return (
-    <a className="nav-link" href={panoramaHref}>
-      Panorama
-    </a>
-  );
+  return createElement('a', { className: 'nav-link', href: panoramaHref }, 'Panorama');
 }
