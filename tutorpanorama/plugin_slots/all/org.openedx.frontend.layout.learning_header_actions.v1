@@ -1,0 +1,10 @@
+// Not available in Ulmo's frontend-component-header yet; kept for newer releases.
+{
+  op: PLUGIN_OPERATIONS.Insert,
+  widget: {
+    id: 'panorama_learning_header_action',
+    type: DIRECT_PLUGIN,
+    priority: 90,
+    RenderWidget: renderPanoramaLearningActionLink,
+  },
+}

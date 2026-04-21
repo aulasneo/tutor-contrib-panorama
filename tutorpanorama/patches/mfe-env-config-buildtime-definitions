@@ -34,3 +34,29 @@ function renderPanoramaSecondaryMenuItem() {
     </a>
   );
 }
+
+function renderPanoramaLearningActionLink() {
+  const panoramaHref = getConfig().PANORAMA_URL;
+  if (!panoramaHref) {
+    return null;
+  }
+
+  return (
+    <a className="text-gray-700" href={panoramaHref}>
+      Panorama
+    </a>
+  );
+}
+
+function renderPanoramaStudioActionLink() {
+  const panoramaHref = getConfig().PANORAMA_URL;
+  if (!panoramaHref) {
+    return null;
+  }
+
+  return (
+    <a className="btn btn-link" href={panoramaHref}>
+      Panorama
+    </a>
+  );
+}
