@@ -1,5 +1,9 @@
 # Change log
 
+## Unreleased
+
+- Use frontend-app-panorama version release/ulmo/20260624
+
 ## Version 21.1.1 (2026-04-21)
 
 - Use secondary menu in learner dashboard

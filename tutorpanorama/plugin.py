@@ -23,7 +23,7 @@ PANORAMA_OPENEDX_BACKEND_REPO = (
 PANORAMA_OPENEDX_BACKEND_VERSION = "release/ulmo/20260401"
 
 PANORAMA_MFE_REPO = "https://github.com/aulasneo/frontend-app-panorama.git"
-PANORAMA_MFE_VERSION = "release/ulmo/20260403"
+PANORAMA_MFE_VERSION = "release/ulmo/20260624"
 
 # Tag at https://github.com/aulasneo/panorama-elt.git
 PANORAMA_ELT_VERSION = "v0.3.2"
