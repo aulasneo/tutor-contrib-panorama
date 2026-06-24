@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 21.2.0 (2026-06-24)
 
 - Use frontend-app-panorama version release/ulmo/20260624
 
