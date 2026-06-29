@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 21.2.1 (2026-06-29)
 
 - Use frontend-app-panorama version release/ulmo/20260624: Fix student view error
 
