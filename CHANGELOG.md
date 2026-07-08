@@ -1,5 +1,8 @@
 # Change log
 
+## Unreleased
+- Cherry-pick from v21.2.2: Use elt v1.0.1. Fix failing when a table does not exist in mysql
+
 ## Version 19.1.3 (2026-03-04)
 
 - Use openedx-backend-version 16.0.15 (fix user arn)
