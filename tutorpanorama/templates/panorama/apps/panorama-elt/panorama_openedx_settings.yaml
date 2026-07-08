@@ -658,3 +658,25 @@ datasources:
       type: varchar
     - name: enterprise_customer_id
       type: char
+  - fields:
+    - type: int
+      name: id
+    - type: datetime
+      name: created
+    - type: datetime
+      name: modified
+    - type: int
+      name: user_id
+    - type: varchar
+      name: course_id
+    - type: int
+      name: complete_count
+    - type: int
+      name: incomplete_count
+    - type: int
+      name: locked_count
+    - type: decimal
+      name: percent_complete
+    - type: datetime
+      name: computed_at
+    name: openedx_progress_coursecompletionsummary
