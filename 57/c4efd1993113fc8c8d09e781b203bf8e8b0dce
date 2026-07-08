@@ -1,0 +1,16 @@
+CHANGELOG.md
+  h_67430f944e00e2 3-5
+tutorpanorama/plugin.py
+  h_67430f944e00e2 29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "57c4efd1993113fc8c8d09e781b203bf8e8b0dce",
+  "prompts": {},
+  "humans": {
+    "h_67430f944e00e2": {
+      "author": "Andrés González <andres@aulasneo.com>"
+    }
+  }
+}
