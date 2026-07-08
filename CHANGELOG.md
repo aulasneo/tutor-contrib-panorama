@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 19.2.0 (2026-07-08)
 - Cherry-pick from v21.2.2: Use elt v1.0.1. Fix failing when a table does not exist in mysql
 - Cherry-pick from v21.2.2: Add openedx_progress_coursecompletionsummary table
 
