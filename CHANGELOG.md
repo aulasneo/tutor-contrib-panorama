@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 21.2.2 (2026-07-08)
 - Add openedx_progress_coursecompletionsummary table
 - Use elt v1.0.1. Fix failing when a table does not exist in mysql
 
