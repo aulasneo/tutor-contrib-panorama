@@ -26,7 +26,7 @@ PANORAMA_MFE_REPO = "https://github.com/aulasneo/frontend-app-panorama.git"
 PANORAMA_MFE_VERSION = "release/ulmo/20260629"
 
 # Tag at https://github.com/aulasneo/panorama-elt.git
-PANORAMA_ELT_VERSION = "v0.3.2"
+PANORAMA_ELT_VERSION = "v1.0.1"
 
 PANORAMA_MFE_PORT = 2100
 
