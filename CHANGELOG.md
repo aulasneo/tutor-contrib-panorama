@@ -1,5 +1,8 @@
 # Change log
 
+## Unreleased
+- Updated to fit the new Tutor k8s patches spec.
+
 ## Version 21.2.2 (2026-07-08)
 - Add openedx_progress_coursecompletionsummary table
 - Use elt v1.0.1. Fix failing when a table does not exist in mysql
