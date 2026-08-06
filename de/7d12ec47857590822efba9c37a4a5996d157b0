@@ -1,0 +1,19 @@
+tutorpanorama/patches/k8s-deployments
+  s_aa884fd74beb37::t_73aa361bf3f9bd 38,100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "de7d12ec47857590822efba9c37a4a5996d157b0",
+  "prompts": {},
+  "sessions": {
+    "s_aa884fd74beb37": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "679dde7e-349c-4441-b78d-4c5099c9bd87",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Andrés González <andres@aulasneo.com>"
+    }
+  }
+}
