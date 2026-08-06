@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 21.2.3 (2026-08-06)
 - Updated to fit the new Tutor k8s patches spec.
 
 ## Version 21.2.2 (2026-07-08)
