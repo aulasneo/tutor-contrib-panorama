@@ -242,6 +242,10 @@ Set the following variables to configure Panorama:
 | `PANORAMA_LOGS_UPLOAD_TIMEOUT` | `10m` | Maximum time before log files are uploaded even if they don't reach the size limit |
 | `PANORAMA_LOGS_UPLOAD_CHUNK_SIZE` | `10M` | Chunk size for multipart uploads to S3 |
 | `PANORAMA_K8S_JOB_MEMORY` |  | Memory request for Panorama job in K8s. Use only if you get OOM-killed pods |
+| `PANORAMA_FLB_MEM_REQUEST` | `100Mi` | Memory request for Fluentbit daemonsets in K8s. |
+| `PANORAMA_FLB_CPU_REQUEST` | `100m` | CPU request for Fluentbit daemonsets in K8s. |
+| `PANORAMA_FLB_MEM_LIMIT` | `256Mi` | Memory limit for Fluentbit daemonsets in K8s. |
+| `PANORAMA_FLB_CPU_LIMIT` | `500m` | CPU limit for Fluentbit daemonsets in K8s. |
 
 ## Datalake Directory Structure
 

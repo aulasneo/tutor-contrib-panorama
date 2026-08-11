@@ -1,5 +1,8 @@
 # Change log
 
+## Unreleased
+- Add variables to configure Fluentbit daemonset's memory and cpu requests and limits.
+
 ## Version 21.2.3 (2026-08-06)
 - Updated to fit the new Tutor k8s patches spec.
 

@@ -62,6 +62,10 @@ config = {
         "user/default/{{ LMS_HOST }}",
         "K8S_JOB_MEMORY_REQUEST": None,
         "K8S_JOB_MEMORY_LIMIT": None,
+        "FLB_CPU_LIMIT": "500m",
+        "FLB_MEM_LIMIT": "256Mi",
+        "FLB_CPU_REQUEST": "100m",
+        "FLB_MEM_REQUEST": "100Mi",
     },
     # Add here settings that don't have a reasonable default for all users. For
     # instance: passwords, secret keys, etc.
