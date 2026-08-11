@@ -1,0 +1,20 @@
+CHANGELOG.md
+  h_67430f944e00e2 3-5
+README.md
+  h_67430f944e00e2 245-248
+tutorpanorama/patches/k8s-deployments
+  h_67430f944e00e2 83-84,86-87
+tutorpanorama/plugin.py
+  h_67430f944e00e2 65-68
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "bcd6251dc550a6344d82259a75947c3eb47ff3c1",
+  "prompts": {},
+  "humans": {
+    "h_67430f944e00e2": {
+      "author": "Andrés González <andres@aulasneo.com>"
+    }
+  }
+}
