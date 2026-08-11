@@ -1,0 +1,20 @@
+tutorpanorama/__about__.py
+  h_67430f944e00e2 5
+.bumpversion.cfg
+  h_67430f944e00e2 5
+CHANGELOG.md
+  h_67430f944e00e2 3
+requirements.txt
+  h_67430f944e00e2 1-164,166-168,170-196
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c7cd22f6940ce5e077d479af54cf8d4859fa514c",
+  "prompts": {},
+  "humans": {
+    "h_67430f944e00e2": {
+      "author": "Andrés González <andres@aulasneo.com>"
+    }
+  }
+}
