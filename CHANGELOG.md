@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 21.3.0 (2026-08-27)
 - feat: Hide the Panorama link if PANORAMA_ENABLE_STUDENT_VIEW=False and the user is not admin.
 
 ## Version 21.2.4 (2026-08-11)
