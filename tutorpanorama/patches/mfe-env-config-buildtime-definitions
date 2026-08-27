@@ -24,7 +24,14 @@ function addPanoramaMenuItem(widget) {
 
 function renderPanoramaSecondaryMenuItem() {
   const panoramaHref = getConfig().PANORAMA_URL;
+  const panoramaEnableStudentView = getConfig().PANORAMA_ENABLE_STUDENT_VIEW;
+  const { authenticatedUser } = useContext(AppContext);
+
   if (!panoramaHref) {
+    return null;
+  }
+
+  if (!panoramaEnableStudentView && !authenticatedUser?.administrator) {
     return null;
   }
 
