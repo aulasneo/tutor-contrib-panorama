@@ -1,0 +1,24 @@
+tutorpanorama/patches/mfe-env-config-buildtime-definitions
+  s_807931c465f8c5::t_cdda26b6791f47 27
+  s_807931c465f8c5::t_c7d58ec2d218d4 34
+  s_807931c465f8c5::t_7a8aeb276cb4bb 28-29
+  s_807931c465f8c5::t_9e7250957512ba 35-37
+tutorpanorama/patches/mfe-lms-production-settings
+  s_807931c465f8c5::t_b321992ca583b8 1-2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "58f198713eefd19150ba9fba6a550a58bd47ea5a",
+  "prompts": {},
+  "sessions": {
+    "s_807931c465f8c5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "16f5f3b4-9293-4167-9891-b5d9d6ee7b96",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Andrés González <andres@aulasneo.com>"
+    }
+  }
+}
