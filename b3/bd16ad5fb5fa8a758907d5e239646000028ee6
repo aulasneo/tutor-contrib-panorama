@@ -1,0 +1,135 @@
+tutorpanorama/patches/mfe-site-custom-app-final
+  s_fc06a46b08c17a::t_f04aed2b2914f8 12
+  s_fc06a46b08c17a::t_fe99e4f26ccb2b 1-11,13-21
+tutorpanorama/patches/openedx-dockerfile-post-python-requirements
+  s_ae64a8b5693044::t_53d054db80a9c9 2
+tutorpanorama/patches/openedx-lms-common-settings
+  s_fc06a46b08c17a::t_23ab42b2106096 1,9-10
+tutorpanorama/patches/mfe-lms-development-settings
+  s_fc06a46b08c17a::t_139ee9111be57f 1,4
+tutorpanorama/templates/panorama/build/panorama-elt-logs/Dockerfile
+  s_fc06a46b08c17a::t_cab0397cbbee02 2,9
+docs/verawood-validation.md
+  s_fc06a46b08c17a::t_6eb092e0aca64e 72-76
+  s_fc06a46b08c17a::t_04238305ab0d63 31
+  s_fc06a46b08c17a::t_e11dec0848ad76 36-40,51-53
+  s_fc06a46b08c17a::t_047fcd122a68ad 1-30,32-35,41-50,54-71,77-96
+tutorpanorama/plugin.py
+  s_fc06a46b08c17a::t_7560f46ab537b2 178-179,186,204-210
+  s_fc06a46b08c17a::t_139ee9111be57f 9,15-16,36-40,58-64,188-194,200-203,211-216,220,274,284-286,288-290
+  s_ae64a8b5693044::t_53d054db80a9c9 20-21
+  s_fc06a46b08c17a::t_3a386dde40ba04 195-199
+  s_fc06a46b08c17a::t_fe99e4f26ccb2b 217-219
+  s_ae64a8b5693044::t_34cecb4b50d7f1 24
+tutorpanorama/patches/mfe-env-config-buildtime-imports
+  s_fc06a46b08c17a::t_fe99e4f26ccb2b 2-5
+  s_fc06a46b08c17a::t_a803ee1d382340 1
+tutorpanorama/patches/local-docker-compose-services
+  s_fc06a46b08c17a::t_cab0397cbbee02 21-22,29
+pyproject.toml
+  s_fc06a46b08c17a::t_23ab42b2106096 10,17,20-21,24-25,48
+tests/navigation.cjs
+  s_fc06a46b08c17a::t_e855debe6176b1 1-76
+tutorpanorama/patches/mfe-lms-production-settings
+  s_fc06a46b08c17a::t_139ee9111be57f 1-4
+tutorpanorama/plugin_slots/all/mobile_main_menu_slot
+  s_fc06a46b08c17a::t_fe99e4f26ccb2b 2-8
+tutorpanorama/patches/k8s-deployments
+  s_fc06a46b08c17a::t_cab0397cbbee02 12,30,34,73-75,98,100-101
+CHANGELOG.md
+  s_fc06a46b08c17a::t_e606eab375823e 3-23
+tutorpanorama/plugin_slots/all/org.openedx.frontend.layout.header_desktop_secondary_menu.v1
+  s_fc06a46b08c17a::t_fe99e4f26ccb2b 7
+tutorpanorama/templates/panorama/build/panorama-elt/Dockerfile
+  s_fc06a46b08c17a::t_cab0397cbbee02 1,4,7-8,10-11,13-16
+tests/test_fluentbit.py
+  s_fc06a46b08c17a::t_8e25f62958b366 8,54-58,63-64
+  s_fc06a46b08c17a::t_236e07561332cc 1-7,12-27,29-32,35-41,43-53,65-68
+  s_fc06a46b08c17a::t_1a5d12e8625916 59-62,106-109,114-115
+  s_fc06a46b08c17a::t_3139250f58251f 42
+  s_fc06a46b08c17a::t_2b71433815ae83 9-11,28,33-34,69-105,110-113,116-118
+tutorpanorama/templates/panorama/tasks/lms/init
+  s_fc06a46b08c17a::t_139ee9111be57f 6
+  s_fc06a46b08c17a::t_04238305ab0d63 1,3
+  s_fc06a46b08c17a::t_59c25225aea16f 5
+tutorpanorama/templates/panorama/apps/panorama-elt/fluent-bit.conf
+  s_fc06a46b08c17a::t_cab0397cbbee02 3,11-12,14,17-18,33,41,47-50,64-65,72
+  s_fc06a46b08c17a::t_3139250f58251f 7,9
+tests/test_verawood.py
+  s_fc06a46b08c17a::t_a74159705ca5cf 1-13,17-43,47-49,51,57,60-69,71-74,76-82,102-112
+  s_fc06a46b08c17a::t_04238305ab0d63 44-46
+  s_fc06a46b08c17a::t_dff6cac1e97a22 14-16
+  s_fc06a46b08c17a::t_e11dec0848ad76 70
+  s_fc06a46b08c17a::t_3139250f58251f 75,83-101
+  s_fc06a46b08c17a::t_047fcd122a68ad 50,52-56,58-59
+tutorpanorama/patches/mfe-env-config-buildtime-definitions
+  s_fc06a46b08c17a::t_fe99e4f26ccb2b 2-15,17-23,25
+  s_fc06a46b08c17a::t_f04aed2b2914f8 16
+  s_fc06a46b08c17a::t_a803ee1d382340 1
+docs/verawood-upgrade-plan.md
+  s_f878cdeb9d7965::t_56ebb5a76d92ca 35,136
+  s_f878cdeb9d7965::t_5abfdddb93bd5d 1-34,36-135,137-183,185-196
+  s_f878cdeb9d7965::t_4716c38ca963ff 184
+tutorpanorama/templates/panorama/apps/panorama-elt/fluent-bit-local.conf
+  s_fc06a46b08c17a::t_cab0397cbbee02 3,7-12,15,21-24,42-43,50
+README.md
+  s_fb26e41eef3384::t_4c6b3ed956f940 232-234
+  s_fc06a46b08c17a::t_e11dec0848ad76 242-248,255,280
+  s_fc06a46b08c17a::t_d1aaf5c5a4f6f4 219-222,224-230,235-241,249-254,256-259,284-285
+  s_ae64a8b5693044::t_53d054db80a9c9 223
+  s_fc06a46b08c17a::t_04238305ab0d63 231
+tutorpanorama/patches/k8s-jobs
+  s_fc06a46b08c17a::t_cab0397cbbee02 10-11,47-51,54-55,65-75,89
+tutorpanorama/patches/mfe-site-custom-app-imports
+  s_fc06a46b08c17a::t_fe99e4f26ccb2b 1-4
+tutorpanorama/__about__.py
+  s_80fbc0cf1f5463::t_5a3af3c1a7770b 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "b3bd16ad5fb5fa8a758907d5e239646000028ee6",
+  "prompts": {},
+  "sessions": {
+    "s_80fbc0cf1f5463": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0ad50-06bb-76b1-9b42-f87793d1b526",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Andrés González <andres@aulasneo.com>"
+    },
+    "s_ae64a8b5693044": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0aa5f-c74b-7912-bcee-8ac7eab903e2",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Andrés González <andres@aulasneo.com>"
+    },
+    "s_f878cdeb9d7965": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0813c-b121-7c53-8d42-463cd0cff804",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Andrés González <andres@aulasneo.com>"
+    },
+    "s_fb26e41eef3384": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0917a-94e6-7ad1-b2aa-54fbd276d56f",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Andrés González <andres@aulasneo.com>"
+    },
+    "s_fc06a46b08c17a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a081aa-1820-7423-ace8-95212956e242",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Andrés González <andres@aulasneo.com>"
+    }
+  }
+}
