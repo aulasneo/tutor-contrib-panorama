@@ -1,0 +1,21 @@
+package.json
+  s_ae64a8b5693044::t_27416f516e7bb5 10
+package-lock.json
+  s_ae64a8b5693044::t_8505efa5eb6e25 11,647,835,1145
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "339b97ea3e3c9f2c844a20331f7c9056d8ea6e5d",
+  "prompts": {},
+  "sessions": {
+    "s_ae64a8b5693044": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0aa5f-c74b-7912-bcee-8ac7eab903e2",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Andrés González <andres@aulasneo.com>"
+    }
+  }
+}
