@@ -4,6 +4,6 @@
     id: 'panorama_secondary_menu_item',
     type: DIRECT_PLUGIN,
     priority: 10,
-    RenderWidget: renderPanoramaSecondaryMenuItem,
+    RenderWidget: PanoramaNavigationLink,
   },
 }

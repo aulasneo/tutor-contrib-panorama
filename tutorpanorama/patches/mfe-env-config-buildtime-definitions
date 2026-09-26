@@ -1,39 +1,25 @@
-function addPanoramaMenuItem(widget) {
-  const widgetProps = widget.RenderWidget.props || {};
-  const existingMenu = widgetProps.menu || [];
-  const panoramaHref = getConfig().PANORAMA_URL;
-
-  if (
-    !panoramaHref
-    || existingMenu.some((item) => item.href === panoramaHref)
-  ) {
-    return widget;
-  }
-
-  widget.content.menu = [
-    ...existingMenu,
-    {
-      type: 'item',
-      href: panoramaHref,
-      content: 'Panorama',
-    },
-  ];
-
-  return widget;
+{% if PANORAMA_MFE_ENABLED and current_mfe is not defined %}
+function PanoramaNavigationLink() {
+  const [user, setUser] = panoramaUseState(() => panoramaGetAuthenticatedUser());
+  const [access, setAccess] = panoramaUseState(null);
+  const { PANORAMA_URL: href, LMS_BASE_URL: lms } = panoramaGetConfig();
+  panoramaUseEffect(() => {
+    const changed = () => setUser(panoramaGetAuthenticatedUser());
+    const subscription = panoramaSubscribe(PANORAMA_AUTH_CHANGED, changed);
+    changed();
+    return () => panoramaUnsubscribe(subscription);
+  }, []);
+  panoramaUseEffect(() => {
+    let active = true;
+    setAccess(null);
+    if (user && href && lms) {
+      panoramaGetAuthenticatedHttpClient().get(`${lms}/panorama/api/get-user-access`)
+        .then(({ data }) => { if (active) setAccess({ user, allowed: data.body === true }); })
+        .catch(() => { if (active) setAccess(null); });
+    }
+    return () => { active = false; };
+  }, [user, href, lms]);
+  return href && user && access?.user === user && access.allowed
+    ? panoramaCreateElement('a', { className: 'nav-link', href }, 'Panorama') : null;
 }
-
-function renderPanoramaSecondaryMenuItem() {
-  const panoramaHref = getConfig().PANORAMA_URL;
-  const panoramaEnableStudentView = getConfig().PANORAMA_ENABLE_STUDENT_VIEW;
-  const { authenticatedUser } = useContext(AppContext);
-
-  if (!panoramaHref) {
-    return null;
-  }
-
-  if (!panoramaEnableStudentView && !authenticatedUser?.administrator) {
-    return null;
-  }
-
-  return createElement('a', { className: 'nav-link', href: panoramaHref }, 'Panorama');
-}
+{% endif %}

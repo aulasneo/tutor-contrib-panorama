@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: docs
+.PHONY: docs requirements upgrade
 
 PYTHON ?= python3
 SRC_DIRS = ./tutorpanorama
@@ -8,12 +8,11 @@ BLACK_OPTS = --exclude templates ${SRC_DIRS}
 clean: ## Remove build artifacts
 	rm -rf build dist *.egg-info
 
-upgrade: ## Compile requirements from requirements.in
-	pip-compile
+upgrade: ## Upgrade project and development dependencies from pyproject.toml
+	$(PYTHON) -m pip install --upgrade --upgrade-strategy eager -e '.[dev]'
 
-requirements: ## Install requirements from requirements.txt
-	$(PYTHON) -m pip install --upgrade -r requirements.txt
-	$(PYTHON) -m pip install -e .
+requirements: ## Install project and development dependencies from pyproject.toml
+	$(PYTHON) -m pip install --upgrade -e '.[dev]'
 
 build: clean ## Build the package
 	$(PYTHON) -m build

@@ -216,6 +216,47 @@ Finally, you will have to connect QuickSight to Athena to visualize the data.
 
 ## Configuration
 
+Tutor 22 / Verawood implementation and validation details are in
+[docs/verawood-validation.md](docs/verawood-validation.md). Panorama remains a
+standalone MFE; the plugin contributes native frontend-base navigation as well.
+No Panorama release version has been changed. Before testing new images, set
+`PANORAMA_OPENEDX_BACKEND_VERSION` to the PyPI package version (default `22.0.0`), and
+`PANORAMA_MFE_REPO` / `PANORAMA_MFE_VERSION`, and `PANORAMA_ELT_REPO` /
+`PANORAMA_ELT_VERSION` to your reviewed source references. Historical defaults are
+retained pending manual release; they do not include these uncommitted changes.
+For standalone MFE builds Tutor also supports a mounted source build context.
+
+`PANORAMA_MFE_ENABLED=False` disables the MFE, navigation, backend install/settings
+and migrations without disabling separately configured extraction. Backend init
+skips DEMO mode and otherwise only applies committed migrations. Backend installation uses the target platform's
+requirements as constraints and runs `pip check`. The install step explicitly
+bind-mounts the constraints from Tutor's `edx-platform` build stage because
+the mount used by Tutor's earlier install step does not persist.
+
+Recurring jobs forbid overlap, retain one successful/two failed jobs and default to
+one retry, a 3300-second active deadline and a 300-second scheduling deadline.
+Adjust `PANORAMA_K8S_JOB_BACKOFF_LIMIT`, `PANORAMA_K8S_JOB_ACTIVE_DEADLINE_SECONDS`
+and `PANORAMA_K8S_CRON_STARTING_DEADLINE_SECONDS` for the configured schedule.
+Both jobs use `PANORAMA_K8S_JOB_MEMORY_REQUEST` and `PANORAMA_K8S_JOB_MEMORY_LIMIT`.
+
+Fluent Bit uses a digest-pinned 3.4.15 image (Fluent Bit 5.0.9). Enable
+`PANORAMA_RUN_K8S_FLUENTBIT` in exactly one SAAS/CUSTOM site per cluster and disable
+it in every other site. That site's DaemonSet collects LMS container logs across
+all namespaces, excluding LMS workers, using the collector site's bucket/credentials.
+RBAC names and host state are scoped to the hosting installation, not the source
+sites. Offsets and S3 buffers persist under
+`/var/lib/panorama-fluentbit/<collector-namespace>` on each Kubernetes node;
+Compose uses Tutor's `data/panorama-fluentbit` directory. Node/disk loss is not
+covered by this persistence. Default S3 spool capacity is 1G (`PANORAMA_FLB_STORE_LIMIT`),
+tail memory 32M (`PANORAMA_FLB_TAIL_MEMORY_LIMIT`) and line limit 1M
+(`PANORAMA_FLB_LINE_MAX_SIZE`). Oversized physical lines are skipped with a warning
+so subsequent records remain readable; spool exhaustion can lose data. Monitor
+object arrival and disk/backlog growth rather than relying on output-success counters.
+Kubernetes keys retain `/tracking_logs/<source-namespace>/...`; Compose keys retain their
+existing LMS-host paths. `PANORAMA_LOGS_UPLOAD_CHUNK_SIZE` is retained as a deprecated
+configuration key but is unused with PutObject. Drain existing buffers before switching
+collectors and account for the new offset path when checking duplicates at cutover.
+
 Set the following variables to configure Panorama:
 
 | Variable | Default | Description |
@@ -236,12 +277,12 @@ Set the following variables to configure Panorama:
 | `PANORAMA_AWS_SECRET_ACCESS_KEY` | `OPENEDX_AWS_SECRET_ACCESS_KEY` | AWS access secret |
 | `PANORAMA_USE_SPLIT_MONGO` | `True` | Set to false for versions older than Maple |
 | `PANORAMA_FLB_LOG_LEVEL` | `info` | Set the Fluent Bit logging level |
-| `PANORAMA_RUN_K8S_FLUENTBIT` | `True` | In K8s deployments, set to false to disable the Fluent Bit daemonset. Leave only one namespace running Fluent Bit |
+| `PANORAMA_RUN_K8S_FLUENTBIT` | `True` | Enable in exactly one SAAS/CUSTOM site per cluster; collects LMS logs from all namespaces. Set false in all other sites. |
 | `PANORAMA_DEBUG` | `False` | Set to true to run Panorama ELT in verbose debug mode |
 | `PANORAMA_LOGS_TOTAL_FILE_SIZE` | `50M` | Maximum size of log files before uploading to S3 |
 | `PANORAMA_LOGS_UPLOAD_TIMEOUT` | `10m` | Maximum time before log files are uploaded even if they don't reach the size limit |
-| `PANORAMA_LOGS_UPLOAD_CHUNK_SIZE` | `10M` | Chunk size for multipart uploads to S3 |
-| `PANORAMA_K8S_JOB_MEMORY` |  | Memory request for Panorama job in K8s. Use only if you get OOM-killed pods |
+| `PANORAMA_LOGS_UPLOAD_CHUNK_SIZE` | `10M` | Deprecated; unused for PutObject uploads |
+| `PANORAMA_K8S_JOB_MEMORY_REQUEST` / `PANORAMA_K8S_JOB_MEMORY_LIMIT` |  | Memory request/limit for one-off and recurring jobs |
 | `PANORAMA_FLB_MEM_REQUEST` | `100Mi` | Memory request for Fluentbit daemonsets in K8s. |
 | `PANORAMA_FLB_CPU_REQUEST` | `100m` | CPU request for Fluentbit daemonsets in K8s. |
 | `PANORAMA_FLB_MEM_LIMIT` | `256Mi` | Memory limit for Fluentbit daemonsets in K8s. |

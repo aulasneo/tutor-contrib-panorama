@@ -18,7 +18,8 @@ panorama_logs:
     volumes:
         - ../plugins/panorama/apps/panorama-elt/fluent-bit-local.conf:/fluent-bit/etc/fluent-bit.conf:ro
         - ../plugins/panorama/apps/panorama-elt/parsers.conf:/fluent-bit/etc/parsers.conf:ro
-        - ../../data/lms:/openedx/data
+        - ../../data/lms:/openedx/data:ro
+        - ../../data/panorama-fluentbit:/var/lib/panorama-fluentbit
     restart: unless-stopped
 {% else %}
 # Panorama in FREE mode, skipping fluentbit docker images

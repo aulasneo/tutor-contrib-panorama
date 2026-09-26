@@ -9,7 +9,7 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: pod-log-reader
+  name: panorama-{{ K8S_NAMESPACE }}-pod-log-reader
 rules:
 - apiGroups: [""]
   resources:
@@ -27,11 +27,11 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: pod-log-crb
+  name: panorama-{{ K8S_NAMESPACE }}-pod-log-crb
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: pod-log-reader
+  name: panorama-{{ K8S_NAMESPACE }}-pod-log-reader
 subjects:
 - kind: ServiceAccount
   name: fluent-bit
@@ -70,14 +70,14 @@ spec:
         volumeMounts:
         - name: varlog
           mountPath: /var/log
+          readOnly: true
+        - name: panorama-fluentbit-state
+          mountPath: /var/lib/panorama-fluentbit
         - name: varlibdockercontainers
           mountPath: /var/lib/docker/containers
           readOnly: true
         - name: fluent-bit-config
           mountPath: /fluent-bit/etc/
-        - name: mnt
-          mountPath: /mnt
-          readOnly: true
         resources:
           limits:
             cpu: {{ PANORAMA_FLB_CPU_LIMIT }}
@@ -95,7 +95,8 @@ spec:
       - name: fluent-bit-config
         configMap:
           name: fluent-bit-config
-      - name: mnt
+      - name: panorama-fluentbit-state
         hostPath:
-          path: /mnt
+          path: /var/lib/panorama-fluentbit/{{ K8S_NAMESPACE }}
+          type: DirectoryOrCreate
 {% endif %}

@@ -7,21 +7,35 @@ authors = [
 license = { text = "AGPLv3" }
 license-files = []
 readme = { file = "README.md", content-type = "text/markdown" }
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: System Administrators",
   "License :: OSI Approved :: GNU Affero General Public License v3",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-  "tutor>=21.0.0,<22.0.0",
-  "tutor-mfe>=21.0.0,<22.0.0",
+  "tutor>=22.0.0,<23.0.0",
+  "tutor-mfe>=22.0.0,<23.0.0",
 ]
 dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = [
+  "black",
+  "build",
+  "isort",
+  "mypy",
+  "pylint",
+  "pytest",
+  "twine",
+]
 
 [project.urls]
 Code = "https://github.com/aulasneo/tutor-contrib-panorama"
@@ -42,5 +56,4 @@ packages = ["tutorpanorama"]
 
 [tool.hatch.build.targets.sdist]
 strict-naming = false
-include = ["/tutorpanorama", "/README.md", "/LICENSE", "/CHANGELOG.md"]
-exclude = ["tests*"]
+include = ["/tutorpanorama", "/README.md", "/LICENSE", "/CHANGELOG.md", "/docs", "/tests"]
