@@ -1,0 +1,68 @@
+.gitignore
+  s_ae64a8b5693044::t_5a90148850af53 11
+CHANGELOG.md
+  s_ae64a8b5693044::t_57693bf9dc4758 11,19
+docs/verawood-validation.md
+  s_ae64a8b5693044::t_15e85d9ecbeb69 9-35
+  s_ae64a8b5693044::t_57693bf9dc4758 3-7,62-66,71,73-75,84
+  s_ae64a8b5693044::t_bfb3113527eda8 8
+tutorpanorama/templates/panorama/apps/panorama-elt/fluent-bit.conf
+  s_ae64a8b5693044::t_d65fe8e4551e36 7
+tests/test_verawood.py
+  s_ae64a8b5693044::t_843e61fce4963d 129
+  s_ae64a8b5693044::t_f14adfe1d6d46f 29-32,36-40,49-55,67,92,139,163-164
+  s_ae64a8b5693044::t_a6b15c59abbd84 85-86
+  s_ae64a8b5693044::t_6a865c343f7b2b 95,101,104
+  s_ae64a8b5693044::t_df7a7cc205d943 126-128
+  s_ae64a8b5693044::t_181ab4a4abf600 83-84,87-90,93-94,96-100,102-103,105-125,130-131
+README.md
+  s_ae64a8b5693044::t_57693bf9dc4758 20-23,27,63,91,109,226,229-232,237-238,247-248,252-255,260-264,274-295,321-323
+tests/navigation.cjs
+  s_ae64a8b5693044::t_075ff83bf3774e 72-73,78-90
+  s_ae64a8b5693044::t_7f119bd92248f8 1,71
+tutorpanorama/patches/openedx-dockerfile-post-python-requirements
+  s_ae64a8b5693044::t_d65fe8e4551e36 2-4
+tests/test_fluentbit.py
+  s_ae64a8b5693044::t_d07d8d79def090 70
+  s_ae64a8b5693044::t_bd5de0b4d635a5 24
+  s_ae64a8b5693044::t_f14adfe1d6d46f 42-44,105-106
+docs/verawood-upgrade-plan.md
+  s_ae64a8b5693044::t_a0e313163b25ca 3,13,25,29,31-32,37,162,170,172
+Makefile
+  s_ae64a8b5693044::t_829fcc070936bc 40-42
+  s_ae64a8b5693044::t_7006668a8f0497 23
+  s_ae64a8b5693044::t_92eb5b7e9c8f1e 38-39,43-48
+pyproject.toml
+  s_ae64a8b5693044::t_829fcc070936bc 59-62
+tutorpanorama/plugin.py
+  s_ae64a8b5693044::t_cdf92fd655175e 228,230
+  s_ae64a8b5693044::t_d65fe8e4551e36 198-203,224-227,229,231
+  s_ae64a8b5693044::t_d24be8edc8ab18 212-214
+  s_ae64a8b5693044::t_7f96e54f7ac87e 211,220
+.bumpversion.cfg
+  s_ae64a8b5693044::t_3e48f3cd437f17 5-20
+.github/workflows/publish.yml
+  s_ae64a8b5693044::t_b33358b7d12107 25-26,48
+package-lock.json
+  s_ae64a8b5693044::t_1d8a0f1c0c6a48 1-1395
+package.json
+  s_ae64a8b5693044::t_78347ea9b1f00b 1-15
+tutorpanorama/__about__.py
+  s_ae64a8b5693044::t_94d84dc96b1640 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "de6754ed4c3d6e4d4f341f9f99a262d9be6bdd39",
+  "prompts": {},
+  "sessions": {
+    "s_ae64a8b5693044": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0aa5f-c74b-7912-bcee-8ac7eab903e2",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Andrés González <andres@aulasneo.com>"
+    }
+  }
+}
