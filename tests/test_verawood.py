@@ -26,9 +26,18 @@ def test_mode_matrix(mode, enabled, fluent):
                   PANORAMA_K8S_JOB_MEMORY_REQUEST="256Mi", PANORAMA_K8S_JOB_MEMORY_LIMIT="512Mi")
     jobs = list(yaml.safe_load_all(render("patches/k8s-jobs", **values)))
     cron = next((job for job in jobs if job and job["kind"] == "CronJob"), None)
+    init_job = next(job for job in jobs if job and job["kind"] == "Job")
+    assert init_job["metadata"]["name"] == "panorama-job"
+    assert "backoffLimit" not in init_job["spec"]
+    assert "activeDeadlineSeconds" not in init_job["spec"]
     assert bool(cron) == (mode != "DEMO")
     if cron:
         assert cron["spec"]["concurrencyPolicy"] == "Forbid"
+        assert cron["spec"]["schedule"] == "55 * * * *"
+        assert cron["spec"]["startingDeadlineSeconds"] == 300
+        assert cron["spec"]["successfulJobsHistoryLimit"] == 1
+        assert cron["spec"]["failedJobsHistoryLimit"] == 2
+        assert cron["spec"]["jobTemplate"]["spec"]["backoffLimit"] == 1
         assert cron["spec"]["jobTemplate"]["spec"]["activeDeadlineSeconds"] == 3300
         container = cron["spec"]["jobTemplate"]["spec"]["template"]["spec"]["containers"][0]
         assert container["resources"] == {"requests": {"memory": "256Mi"}, "limits": {"memory": "512Mi"}}
@@ -37,6 +46,13 @@ def test_mode_matrix(mode, enabled, fluent):
     compose = yaml.safe_load(render("patches/local-docker-compose-services", **values)) or {}
     assert ("panorama" in compose) == (mode != "DEMO")
     assert ("panorama_logs" in compose) == (mode in ["SAAS", "CUSTOM"])
+    if "panorama_logs" in compose:
+        assert compose["panorama_logs"]["volumes"] == [
+            "../plugins/panorama/apps/panorama-elt/fluent-bit-local.conf:/fluent-bit/etc/fluent-bit.conf:ro",
+            "../plugins/panorama/apps/panorama-elt/parsers.conf:/fluent-bit/etc/parsers.conf:ro",
+            "../../data/lms:/openedx/data:ro",
+            "../../data/panorama-fluentbit:/var/lib/panorama-fluentbit",
+        ]
     for patch in ["mfe-lms-production-settings", "mfe-lms-development-settings", "mfe-env-config-buildtime-imports", "mfe-env-config-buildtime-definitions", "mfe-site-custom-app-imports", "mfe-site-custom-app-final", "openedx-dockerfile-post-python-requirements"]:
         assert bool(render(f"patches/{patch}", **values).strip()) == enabled
     init = render("templates/panorama/tasks/lms/init", **values)
@@ -48,6 +64,7 @@ def test_mode_matrix(mode, enabled, fluent):
 
 def test_configurable_sources_and_disabled_navigation():
     from tutormfe import plugin as mfe_plugin
+    original_config = plugin._loaded_config.copy()
     try:
         # Prime Tutor's caches with the old config, as config save/default rendering does.
         plugin._load_panorama_config({"PANORAMA_MFE_ENABLED": True})
@@ -63,8 +80,55 @@ def test_configurable_sources_and_disabled_navigation():
         plugin._load_panorama_config({"PANORAMA_MFE_ENABLED": True, "PANORAMA_MFE_REPO": "https://example.org/test.git", "PANORAMA_MFE_VERSION": "tested-sha", "PANORAMA_MFE_PORT": 2101})
         assert plugin._add_panorama_mfes({})["panorama"] == {"repository": "https://example.org/test.git", "version": "tested-sha", "port": 2101}
         assert len(plugin._panorama_frontend_slots([])) == 2
+        for target, slot in zip(("secondaryLinks", "mobileMenuLinks"), plugin._panorama_frontend_slots([])):
+            assert f"slotId: 'org.openedx.frontend.slot.header.{target}.v1'" in slot
+            assert f"id: 'panorama_{target}', component: PanoramaSiteLink" in slot
+            assert "widget:" not in slot
+        assert any(
+            slot_name == "org.openedx.frontend.layout.header_mobile_main_menu.v1"
+            for _mfe_name, slot_name, _contents in plugin._panorama_legacy_slots([])
+        )
     finally:
-        plugin._load_panorama_config({})
+        plugin._load_panorama_config(original_config)
+
+
+@pytest.mark.parametrize("memory_request,limit,expected", [
+    (None, None, None),
+    ("256Mi", None, {"requests": {"memory": "256Mi"}}),
+    (None, "512Mi", {"limits": {"memory": "512Mi"}}),
+    ("256Mi", "512Mi", {"requests": {"memory": "256Mi"}, "limits": {"memory": "512Mi"}}),
+])
+def test_job_memory_and_custom_cron_tuning(memory_request, limit, expected):
+    jobs = list(yaml.safe_load_all(render(
+        "patches/k8s-jobs", PANORAMA_MODE="CUSTOM",
+        PANORAMA_K8S_JOB_MEMORY_REQUEST=memory_request, PANORAMA_K8S_JOB_MEMORY_LIMIT=limit,
+        PANORAMA_CRONTAB="*/15 * * * *", PANORAMA_K8S_JOB_BACKOFF_LIMIT=3,
+        PANORAMA_K8S_JOB_ACTIVE_DEADLINE_SECONDS=900,
+        PANORAMA_K8S_CRON_STARTING_DEADLINE_SECONDS=60,
+    )))
+    init = next(job for job in jobs if job and job["kind"] == "Job")
+    cron = next(job for job in jobs if job and job["kind"] == "CronJob")
+    assert cron["spec"]["schedule"] == "*/15 * * * *"
+    assert cron["spec"]["startingDeadlineSeconds"] == 60
+    recurring = cron["spec"]["jobTemplate"]["spec"]
+    assert recurring["backoffLimit"] == 3
+    assert recurring["activeDeadlineSeconds"] == 900
+    assert "backoffLimit" not in init["spec"]
+    assert "activeDeadlineSeconds" not in init["spec"]
+    for spec in (init["spec"], recurring):
+        assert spec["template"]["spec"]["restartPolicy"] == "Never"
+        container = spec["template"]["spec"]["containers"][0]
+        assert container.get("resources") == expected
+
+
+def test_backend_install_preserves_platform_constraints():
+    patch = render("patches/openedx-dockerfile-post-python-requirements",
+                   PANORAMA_MFE_ENABLED=True, PANORAMA_OPENEDX_BACKEND_VERSION="22.0.0")
+    assert ("--mount=type=bind,from=edx-platform,source=/requirements/edx/base.txt,"
+            "target=/openedx/edx-platform/requirements/edx/base.txt") in patch
+    assert "--constraint /openedx/edx-platform/requirements/edx/base.txt" in patch
+    assert "panorama-openedx-backend==22.0.0" in patch
+    assert "&& pip check" in patch
 
 
 def test_urls_and_collector_state_isolation():
@@ -72,7 +136,7 @@ def test_urls_and_collector_state_isolation():
     assert 'http://apps.courses.example.org/panorama/' in render("patches/mfe-lms-production-settings", ENABLE_HTTPS=False)
     assert ':2100/panorama/' in render("patches/mfe-lms-development-settings")
     config = render("templates/panorama/apps/panorama-elt/fluent-bit.conf")
-    assert '/var/log/containers/lms*_*_lms-*.log' in config
+    assert '/var/log/containers/lms*.log' in config
     assert 'multiline.parser  docker, cri' in config
     assert 'store_dir        /var/lib/panorama-fluentbit/s3' in config
     assert '/tracking_logs/$TAG[1]/' in config
@@ -96,7 +160,8 @@ def test_cluster_collector_matches_sites_and_excludes_workers():
     for namespace in ("school-a", "school-b", "third-site"):
         assert collects(f"lms-123-abc_{namespace}_lms-deadbeef.log")
         assert not collects(f"lms-worker-123-abc_{namespace}_lms-deadbeef.log")
-        assert not collects(f"lms-123-abc_{namespace}_sidecar-deadbeef.log")
+        # The agreed cluster-wide input includes sidecars; changing it needs a cutover review.
+        assert collects(f"lms-123-abc_{namespace}_sidecar-deadbeef.log")
         assert not collects(f"cms-123-abc_{namespace}_cms-deadbeef.log")
     assert '/tracking_logs/$TAG[1]/' in config
 

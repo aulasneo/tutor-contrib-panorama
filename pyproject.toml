@@ -56,4 +56,7 @@ packages = ["tutorpanorama"]
 
 [tool.hatch.build.targets.sdist]
 strict-naming = false
-include = ["/tutorpanorama", "/README.md", "/LICENSE", "/CHANGELOG.md", "/docs", "/tests"]
+include = ["/tutorpanorama", "/README.md", "/LICENSE", "/CHANGELOG.md", "/docs", "/tests", "/Makefile", "/package.json", "/package-lock.json"]
+
+[tool.black]
+target-version = ["py310"]

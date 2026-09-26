@@ -7,8 +7,6 @@ metadata:
   labels:
     app.kubernetes.io/component: job
 spec:
-  backoffLimit: {{ PANORAMA_K8S_JOB_BACKOFF_LIMIT }}
-  activeDeadlineSeconds: {{ PANORAMA_K8S_JOB_ACTIVE_DEADLINE_SECONDS }}
   template:
     spec:
       restartPolicy: Never

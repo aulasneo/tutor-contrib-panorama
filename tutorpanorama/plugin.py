@@ -195,7 +195,12 @@ def _load_panorama_config(loaded_config: dict[str, Any]) -> None:
     # tutor-mfe may resolve its cached registry while defaults are being rendered,
     # before CONFIG_LOADED. Refresh it for the final configuration (including --set).
     from tutormfe import plugin as mfe_plugin
-    for getter in (mfe_plugin.get_mfes, mfe_plugin.get_plugin_slots, mfe_plugin.get_frontend_slots):
+
+    for getter in (
+        mfe_plugin.get_mfes,
+        mfe_plugin.get_plugin_slots,
+        mfe_plugin.get_frontend_slots,
+    ):
         getter.cache_clear()
 
 
@@ -203,20 +208,27 @@ def _setting(name: str) -> Any:
     return _loaded_config.get(f"PANORAMA_{name}", config["defaults"][name])
 
 
-@PLUGIN_SLOTS.add()
-def _panorama_legacy_slots(slots: list[tuple[str, str, str]]) -> list[tuple[str, str, str]]:
+@PLUGIN_SLOTS.add()  # type: ignore[untyped-decorator]
+def _panorama_legacy_slots(
+    slots: list[tuple[str, str, str]],
+) -> list[tuple[str, str, str]]:
     if _setting("MFE_ENABLED"):
         slots.extend(_panorama_slots)
     return slots
 
 
-@FRONTEND_SLOTS.add()
+@FRONTEND_SLOTS.add()  # type: ignore[untyped-decorator]
 def _panorama_frontend_slots(slots: list[str]) -> list[str]:
     if _setting("MFE_ENABLED"):
         for target in ("secondaryLinks", "mobileMenuLinks"):
-            slots.append("{ op: PanoramaWidgetOperationTypes.APPEND, slotId: 'org.openedx.frontend.slot.header."
-                         + target + ".v1', id: 'panorama_" + target
-                         + "', component: PanoramaSiteLink }")
+            slots.append(
+                "{ op: PanoramaWidgetOperationTypes.APPEND, "
+                "slotId: 'org.openedx.frontend.slot.header."
+                + target
+                + ".v1', id: 'panorama_"
+                + target
+                + "', component: PanoramaSiteLink }"
+            )
     return slots
 
 

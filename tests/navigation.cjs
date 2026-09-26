@@ -1,4 +1,4 @@
-// NODE_PATH=/path/to/MFE/node_modules node --test tests/navigation.cjs
+// Install dependencies with npm ci; run the full generated-config check with make test-navigation.
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -68,9 +68,23 @@ for (const native of [false, true]) {
   });
 }
 
-test('generated combined imports have no duplicate local bindings', () => {
-  if (!process.env.PANORAMA_GENERATED_ENV) return;
+test('generated combined imports have no duplicate local bindings', {
+  skip: !process.env.PANORAMA_GENERATED_ENV && 'Set PANORAMA_GENERATED_ENV to a Tutor-generated env.config.jsx',
+}, () => {
   babel.parseSync(fs.readFileSync(process.env.PANORAMA_GENERATED_ENV, 'utf8'), {
     configFile: false, babelrc: false, parserOpts: { sourceType: 'module', plugins: ['jsx'] },
   });
+});
+
+
+test('generated frontend-base configuration has no duplicate local bindings', {
+  skip: !process.env.PANORAMA_GENERATED_ENV && 'Set PANORAMA_GENERATED_ENV to a Tutor-generated env.config.jsx',
+}, () => {
+  const site = path.join(path.dirname(process.env.PANORAMA_GENERATED_ENV), 'site');
+  for (const filename of ['src/customApp.tsx', 'site.config.build.tsx']) {
+    babel.parseSync(fs.readFileSync(path.join(site, filename), 'utf8'), {
+      configFile: false, babelrc: false,
+      parserOpts: { sourceType: 'module', plugins: ['jsx', 'typescript'] },
+    });
+  }
 });

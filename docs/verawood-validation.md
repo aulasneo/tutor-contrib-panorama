@@ -1,7 +1,38 @@
 # Verawood implementation and validation
 
-Validated 2026-09-08. No Panorama versions/tags were changed, and nothing was
-published, pushed or deployed. Existing worktree edits were retained.
+Historical validation recorded on 2026-09-08 for the source references below.
+The results and temporary artifacts describe that validation run, not the current
+release tree. Subsequent edits include package metadata, source defaults and the
+Panorama prerelease version; rerun affected checks before release. Publication,
+push and deployment status are not established by this historical record.
+
+## Review follow-up (2026-09-26)
+
+The current working tree passed `make test`: lint, strict types, formatting,
+wheel/sdist validation, Tutor rendering, 25 Python tests and four JavaScript
+tests. CI now runs Python contracts and navigation checks, including parsing
+generated standalone and frontend-base configurations. Both CI matrices cover
+Python 3.10–3.14; the local run used Python 3.12.
+
+All four opt-in Fluent Bit replay cases passed separately using the existing
+local collector image with Fluent Bit 5.0.9. This does not establish a rebuild
+of the pinned collector image or Linux Engine execution. The sink invocation
+now supplies the Linux host-gateway mapping. Docker/CRI fixtures use a realistic
+IP prefix; braces and Unicode remain inside the event payload.
+
+The native slot nesting finding was rejected: frontend-base's
+[WidgetAppendOperation](https://github.com/openedx/frontend-base/blob/main/runtime/slots/widget/types.ts)
+defines `id` and `component` at the operation root. The standalone header also
+supports `mobile_main_menu_slot` as an alias; the contribution now uses its
+canonical `org.openedx.frontend.layout.header_mobile_main_menu.v1` identifier.
+The backend `22.0.0` release was verified available through PyPI's version JSON
+endpoint, so the requested PyPI installation remains in place.
+
+The backend install now mounts platform constraints and runs `pip check`;
+final image assembly remains a staging gate. Legacy RBAC removal is an explicit
+operator migration in the README, not an automatic cluster-wide deletion.
+The broad LMS pod input is intentional and includes matching sidecars, as
+required by the workspace collection policy. No live cluster was changed.
 
 ## Exact targets
 
@@ -28,16 +59,20 @@ explicit frontend-site configuration and database overrides with their normal pr
 
 Tutor gates backend/settings/migrations/navigation/app registration together and
 invalidates tutor-mfe caches after final configuration loading. Init applies committed
-migrations outside DEMO mode; DEMO skips backend initialization. Sources are configurable; historical defaults intentionally still need
-operator overrides or mounted reviewed sources until manual release.
+migrations outside DEMO mode; DEMO skips backend initialization. The original
+validation used source overrides or mounted reviewed sources and required
+operator configuration. Current defaults use backend PyPI version `22.0.0`,
+MFE `release/verawood/v20260926` and extractor `v1.0.1`; verify these artifacts
+contain the changes being tested.
 
 CronJobs forbid overlap and have bounded deadlines/retries/history and memory
 settings. Extractor images use Python 3.12, lock installation and package installation,
 retaining cron and legacy script support. One site's Fluent Bit DaemonSet collects
-LMS logs across all namespaces; other sites must disable their collectors. RBAC
+LMS pod log files across all namespaces; other sites must disable their collectors. RBAC
 names and persistent offsets/S3 spool remain scoped to the collector installation,
-with bounded buffers and CRI/Docker multiline parsing. This follows the clarified
-multisite architecture and supersedes the reviewed plan's namespace input restriction.
+with bounded buffers and CRI/Docker multiline parsing. The input remains
+`lms*.log` with `lms-worker*.log` excluded, including matching sidecar files.
+This follows the clarified multisite architecture recorded in the updated plan.
 Consumer S3 paths and raw event text remain compatible.
 
 The local unpublished `tutor-contrib-branding` checkout was already installed.
@@ -46,7 +81,7 @@ patch changes now select frontend-base SiteContext for compatibility rendering a
 legacy AppContext for standalone MFEs, with branding aliases and matching theme/config
 access. Existing branding changes and version were preserved.
 
-## Local results
+## Historical local results (2026-09-08)
 
 - Tutor: 20 contract tests cover all 16 mode/MFE/Fluent Bit combinations, source
   overrides, HTTPS/development URLs, collector state isolation, cross-namespace

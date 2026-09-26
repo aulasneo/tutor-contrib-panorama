@@ -1,3 +1,5 @@
 {% if PANORAMA_MFE_ENABLED %}
-RUN pip install 'panorama-openedx-backend=={{ PANORAMA_OPENEDX_BACKEND_VERSION }}'
+RUN --mount=type=bind,from=edx-platform,source=/requirements/edx/base.txt,target=/openedx/edx-platform/requirements/edx/base.txt \
+    pip install --constraint /openedx/edx-platform/requirements/edx/base.txt 'panorama-openedx-backend=={{ PANORAMA_OPENEDX_BACKEND_VERSION }}' \
+    && pip check
 {% endif %}

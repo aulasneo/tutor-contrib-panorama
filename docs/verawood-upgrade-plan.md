@@ -1,6 +1,6 @@
 # Panorama upgrade plan: Tutor 22 / Open edX Verawood
 
-Reviewed 2026-09-08. This is a reviewed implementation plan, not an implemented upgrade. Keep all Panorama package versions unchanged; release numbering and tagging remain a manual step after testing.
+Originally reviewed 2026-09-08; updated for the current Verawood implementation. This decision record retains the historical review findings and validation baseline below. Packaging and compatibility changes have since landed, including the Panorama prerelease version; publishing and release tagging remain manual steps after testing. See [implementation validation](verawood-validation.md) for the historical implementation checks and outstanding staging gates.
 
 ## Recommended approach
 
@@ -10,7 +10,7 @@ Verawood supports both architectures. Its instructor dashboard and notifications
 
 ## Baseline and boundaries
 
-Reviewed repositories and commits:
+Historical review repositories and commits (not the current artifact provenance):
 
 | Repository | Commit | Relevant existing state |
 | --- | --- | --- |
@@ -22,19 +22,19 @@ Reviewed repositories and commits:
 
 Upstream checks use Tutor/tutor-mfe `v22.0.0` and edx-platform `release/verawood.1`, the release reference configured by that Tutor version. The shared backend dependency versions below agree with the local platform checkout. Recheck the exact deployment patch release before implementation; a moving `main` branch is not the compatibility baseline.
 
-No production configuration, AWS resources, Kubernetes objects, source references, dependency manifests, or project versions were changed during review. Diagnostic environments were isolated. The existing extractor `venv` is Python 3.8.6 and is unsuitable for the package's declared Python >=3.11; tests used an isolated Python 3.12 environment instead.
+The original review used isolated diagnostic environments and did not change production configuration, AWS resources or Kubernetes objects. The current tree includes subsequent package metadata, source-reference, dependency and Panorama version changes; the original review does not validate those later artifacts. The existing extractor `venv` is Python 3.8.6 and is unsuitable for the package's declared Python >=3.11; tests used an isolated Python 3.12 environment instead.
 
 ## 1. Tutor installation and integration
 
-Primary files: [pyproject.toml](../pyproject.toml), [setup.py](../setup.py), [plugin.py](../tutorpanorama/plugin.py), and [patches](../tutorpanorama/patches).
+Primary files: [pyproject.toml](../pyproject.toml), [plugin.py](../tutorpanorama/plugin.py), and [patches](../tutorpanorama/patches).
 
-1. Finish the existing packaging migration. Keep `tutor>=22,<23` and `tutor-mfe>=22,<23` in `pyproject.toml`. Remove or retire the conflicting `setup.py`, which still advertises Tutor 21 and a different Python minimum. Validate wheel and sdist contents, entry-point discovery, templates, patches, and plugin-slot files. A wheel install and plugin import already succeed under Tutor 22.
-2. Make backend, MFE, and extractor source references configurable for testing. The current defaults still select Ulmo backend/MFE branches and extractor `v1.0.1`; local edits alone do not change what Tutor's Docker builds clone. Use mounted sources or explicit tested commit overrides during validation. Leave release versions/tags for the user's manual release step.
+1. The Hatch/PEP 621 migration is complete: `setup.py` has been removed and `pyproject.toml` declares Tutor/tutor-mfe 22 compatibility. Historical validation covered wheel/sdist contents, entry-point discovery and packaged templates, patches and plugin-slot files, plus a disposable wheel installation under Tutor 22. Repeat packaging checks for the artifact selected for release.
+2. Configure the backend PyPI version and MFE/extractor Git references for testing. Current defaults are backend `22.0.0`, MFE `release/verawood/v20260926`, and extractor `v1.0.1`. Local edits alone do not change what Docker builds install; use a reviewed published backend version and explicit source overrides or mounted MFE sources during validation. Leave publishing and tags for the user's manual release step.
 3. Fix `mfe-lms-production-settings`: it currently generates an `http://` Panorama link on an HTTPS deployment. Derive the scheme from Tutor's HTTPS setting. Preserve port 2100 for standalone development.
 4. Fix the legacy navigation imports: generated `env.config.jsx` calls `useContext(AppContext)` but imports neither name. Both missing imports were confirmed in configuration rendered with Tutor 22. A standalone Panorama build does not exercise this generated file.
 5. Apply `PANORAMA_MFE_ENABLED` consistently. Currently it gates backend installation, but `_add_panorama_mfes` registers Panorama unconditionally and the LMS init task still requests backend migrations in SAAS/CUSTOM mode. Gate the app, navigation, configuration, and migration task together while retaining any separately enabled ingestion behavior. Replace initialization-time `makemigrations` with committed, reviewed migrations; initialization should only apply them.
 6. Fix CronJob operational controls: use `concurrencyPolicy: Forbid`, bounded retries/history/deadline appropriate to the schedule, and the configured memory requests/limits. Currently memory settings affect the one-off Job but not the recurring CronJob. Overlapping runs can overwrite the same S3 partition files out of order.
-7. Scope Fluent Bit input, state directories, and cluster RBAC resource names to the installation. Current `lms*.log` input spans namespaces, and fixed ClusterRole/Binding names collide between installations.
+7. Keep one enabled Fluent Bit DaemonSet deployment per cluster, collecting `lms*.log` across all site namespaces and excluding `lms-worker*.log`. Matching sidecar files remain included. Scope only state directories and cluster RBAC resource names to the collector installation; namespace-specific names do not restrict permissions or input. Remove the old global RBAC objects after validating the replacement binding, following the [README migration steps](../README.md#configuration).
 
 Acceptance: render all four modes with MFE enabled/disabled and Fluent Bit enabled/disabled; validate Compose/Kubernetes output and build the actual generated MFE configuration. Test install/init/upgrade using the built plugin artifact in a disposable Tutor root.
 
@@ -159,7 +159,7 @@ In the logs Dockerfile, remove the AWS CLI download/install and build-time `aws 
 Configuration changes:
 
 1. Replace `Parser docker`, `Docker_Mode`, and `Docker_Mode_Flush` with `multiline.parser docker, cri` for Kubernetes container logs. Retain the plain-file path in `fluent-bit-local.conf`. Remove the custom Docker parser only once no input refers to it. Verify full and partial CRI records and Docker split records. [Tail input documentation](https://docs.fluentbit.io/manual/data-pipeline/inputs/tail).
-2. Scope the input to this Tutor namespace and the LMS container while preserving the worker exclusion. Keep tags compatible with Kubernetes metadata lookup. Currently `$TAG[1]` split on `_` identifies a namespace, whereas Compose uses LMS-host-based prefixes. Make that contract explicit and preserve existing consumer paths during the upgrade.
+2. Preserve cluster-wide `lms*.log` input and the `lms-worker*.log` exclusion, without restricting the namespace or container-name suffix. Enable the collector in exactly one site; all collected logs use that site's bucket and credentials. Keep tags compatible with Kubernetes metadata lookup: `$TAG[1]` split on `_` identifies the source namespace, whereas Compose uses LMS-host-based prefixes. Preserve those consumer paths during the upgrade.
 3. Retain tracking-event selection: Tutor 22 still configures the standard console formatter with `[tracking]`, so the current tracking regex is not inherently obsolete. Tighten/test the event parser against actual rendered LMS logs, CR/LF endings, braces in metadata, malformed JSON, and ordinary application logs. Preserve raw event JSON for `log_key event` and correct the obsolete comment claiming a `date` capture exists.
 4. Add a persistent writable S3 `store_dir` and a bounded `store_dir_limit_size`, separately from the tail offset DB. Currently the offset DB lives on the host but S3 buffering defaults to container storage, so a restart can discard buffered records after offsets have advanced. Document and test spool-limit data loss and node-loss behavior; a hostPath only survives pod restarts on the same node. [S3 output buffering](https://docs.fluentbit.io/manual/data-pipeline/outputs/s3).
 5. Budget memory with headroom: `Mem_Buf_Limit 256MB` currently consumes the same scale as the pod's total 256Mi limit, before parser/metadata/output overhead. Bound Kubernetes metadata responses instead of `Buffer_Size 0`; measure realistic log volumes and tune multiline/line limits.
@@ -167,9 +167,9 @@ Configuration changes:
 7. Keep gzip and PutObject semantics initially. `upload_chunk_size` applies to multipart uploads, so it is misleading with `use_put_object On`; remove it from that active path or make upload mode explicit. Add S3 object-arrival/backlog checks; generic Fluent Bit output-success metrics do not establish S3 delivery. [S3 output options](https://docs.fluentbit.io/manual/data-pipeline/outputs/s3).
 8. Apply persistence and restart verification to Compose as well. Its tail input currently has no offset DB. Render `[SERVICE] Log_Level` from `PANORAMA_FLB_LOG_LEVEL` rather than relying on an unreferenced environment variable.
 
-Acceptance: validate the new binary's configuration; replay Docker/CRI/local fixtures to stdout; verify gzip NDJSON and exact S3 keys in a test sink; test rotation, collector restart with pending uploads, S3 outage/recovery, duplicate/missing event detection, namespace isolation, and each supported CPU architecture. Canary the collector with a separate test prefix to avoid duplicate production ingestion.
+Acceptance: validate the new binary's configuration; replay Docker/CRI/local fixtures to stdout; verify gzip NDJSON and exact S3 keys in a test sink; test rotation, collector restart with pending uploads, S3 outage/recovery, duplicate/missing event detection, cross-namespace routing and collector-state isolation, and each supported CPU architecture. Canary the collector with a separate test prefix to avoid duplicate production ingestion.
 
-## Verification already performed
+## Historical review checks (2026-09-08, before implementation)
 
 | Check | Result | Limit |
 | --- | --- | --- |

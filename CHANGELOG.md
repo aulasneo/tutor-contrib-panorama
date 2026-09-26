@@ -8,7 +8,7 @@
 - fix: Apply `PANORAMA_MFE_ENABLED` consistently to app registration, navigation, backend installation/settings and initialization. Refresh tutor-mfe registry caches after loading configuration.
 - fix: Skip backend migrations in DEMO mode and when the MFE is disabled. Apply committed migrations only; remove initialization-time `makemigrations`.
 - fix: Respect `ENABLE_HTTPS` in production Panorama URLs while retaining the standalone development port.
-- feat: Make backend, MFE and extractor Git repositories/references configurable for testing. Historical source defaults remain pending manual release.
+- feat: Make the backend PyPI version and MFE/extractor Git repositories and references configurable for testing. Default the MFE to the Verawood release branch.
 - fix: Constrain backend dependency installation to the target platform's `requirements/edx/base.txt` and verify the installed environment with `pip check`.
 - build: Complete the Hatch/PEP 621 packaging migration, remove conflicting `setup.py` metadata, and include templates, patches, slot definitions, tests and documentation in distribution artifacts.
 - build: Use Python 3.12 for the Tutor extractor image, install its dependency lock and package, and retain cron and legacy script support.
@@ -16,7 +16,7 @@
 - fix: Shell-quote table selections passed to extractor commands.
 - build: Upgrade AWS for Fluent Bit to digest-pinned 3.4.15 (Fluent Bit 5.0.9), removing unnecessary AWS CLI installation and OS-wide updates.
 - fix: Use built-in Docker/CRI multiline parsing and remove the unused custom Docker parser. Preserve cluster-wide LMS log collection, worker exclusion, existing tracking-event regexes and consumer S3 paths; enable the DaemonSet in only one site per cluster.
-- feat: Persist Fluent Bit tail offsets and pending S3 uploads for Kubernetes and Compose. Scope Kubernetes state directories and cluster RBAC names to the collector installation.
+- feat: Persist Fluent Bit tail offsets and pending S3 uploads for Kubernetes and Compose. Scope Kubernetes state directories and cluster RBAC names to the collector installation; document removal of legacy cluster RBAC objects during upgrade.
 - fix: Make tail memory, physical-line size and S3 spool limits configurable, bound Kubernetes metadata buffers, skip oversized lines to continue collection, and render the configured log level.
 - fix: Drop records without a parsed event before S3 output and remove the ineffective multipart chunk-size option from PutObject uploads.
 - test: Add regression coverage for mode/configuration combinations, navigation access and authentication changes, generated plugin configuration, and Fluent Bit replay/local S3 delivery. Document validation results and remaining staging checks.

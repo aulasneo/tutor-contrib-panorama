@@ -21,7 +21,7 @@ pytestmark = pytest.mark.skipif(not IMAGE, reason="Set PANORAMA_TEST_FLUENTBIT_I
 @pytest.mark.parametrize("runtime", ["local", "docker", "cri"])
 def test_replay_tracking_records(tmp_path, runtime):
     event = '{"event_type":"test","value":"Unicode ñ and {braces}"}'
-    message = f'2026-09-08 10:00:00,000 INFO 1 [tracking] [user 3] [ip {{meta}}] logger.py:12 - {event}'
+    message = f'2026-09-08 10:00:00,000 INFO 1 [tracking] [user 3] [ip 192.0.2.1] logger.py:12 - {event}'
     ordinary = '2026-09-08 10:00:00,000 INFO 1 [app] ordinary application log'
     lines = []
     if runtime == "local":
@@ -39,7 +39,9 @@ def test_replay_tracking_records(tmp_path, runtime):
                      f'2026-09-08T10:00:02.000000000Z stdout P {message[:midpoint]}',
                      f'2026-09-08T10:00:02.000000000Z stdout F {message[midpoint:]}']
         config = render("templates/panorama/apps/panorama-elt/fluent-bit.conf")
-        config = config.replace('/var/log/containers/lms*_*_lms-*.log', '/fixtures/input.log')
+        source_path = '/var/log/containers/lms*.log'
+        assert source_path in config, "Replay must redirect the configured tail input"
+        config = config.replace(source_path, '/fixtures/input.log')
         # Kubernetes metadata needs a real API; this replay tests transport and event parsing.
         start = config.index('[FILTER]')
         end = config.index('[FILTER]', start + 1)
@@ -65,7 +67,7 @@ def test_replay_tracking_records(tmp_path, runtime):
     assert result.returncode == 0, result.stderr
     records = [json.loads(line) for line in result.stdout.splitlines() if line.startswith('{')]
     assert len(records) == 2, (result.stdout, result.stderr)
-    assert all(record['event'] == event for record in records)
+    assert all(record['event'] == event for record in records), records
 
 
 def test_gzip_ndjson_and_consumer_key_in_local_sink(tmp_path):
@@ -100,7 +102,8 @@ def test_gzip_ndjson_and_consumer_key_in_local_sink(tmp_path):
     name = f'panorama-sink-{uuid.uuid4().hex}'
     try:
         result = subprocess.run([
-            'docker', 'run', '--rm', '--name', name, '-v', f'{tmp_path}:/fixtures:ro',
+            'docker', 'run', '--rm', '--name', name,
+            '--add-host', 'host.docker.internal:host-gateway', '-v', f'{tmp_path}:/fixtures:ro',
             '-e', 'AWS_ACCESS_KEY_ID=test', '-e', 'AWS_SECRET_ACCESS_KEY=test', '-e', 'AWS_EC2_METADATA_DISABLED=true',
             '--entrypoint', '/bin/sh', IMAGE, '-c',
             'mkdir -p /tmp/panorama; /fluent-bit/bin/fluent-bit -c /fixtures/flb.conf > /tmp/replay.log 2>&1 & collector_pid=$!; '

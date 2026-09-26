@@ -17,10 +17,14 @@ and updates all tables and partitions.
 
 ## Installation
 
+The Tutor 22 / Verawood package is currently a prerelease. The commands below
+opt into the 22.x prerelease series; use them after the package is published.
+For an unpublished checkout, install with `pip install -e .` instead.
+
 1. Install as a Tutor plugin:
 
    ```text
-   pip install tutor-contrib-panorama
+   pip install --pre 'tutor-contrib-panorama>=22,<23'
    ```
 
 2. Enable the plugin:
@@ -56,7 +60,7 @@ To activate `DEMO` mode, install the plugin, rebuild the `openedx` and `mfe`
 images, and restart your deployment. No specific configuration is needed.
 
 ```text
-pip install tutor-contrib-panorama
+pip install --pre 'tutor-contrib-panorama>=22,<23'
 tutor plugins enable panorama
 tutor images build openedx
 tutor images build mfe
@@ -84,7 +88,7 @@ Contact us at <info@aulasneo.com> to get the additional settings needed to
 activate Panorama.
 
 ```text
-pip install tutor-contrib-panorama
+pip install --pre 'tutor-contrib-panorama>=22,<23'
 tutor plugins enable panorama
 tutor images build openedx
 tutor images build mfe
@@ -102,7 +106,7 @@ To connect to Panorama SaaS, please contact us at <info@aulasneo.com> to get
 instructions.
 
 ```text
-pip install tutor-contrib-panorama
+pip install --pre 'tutor-contrib-panorama>=22,<23'
 tutor plugins enable panorama
 tutor images build openedx
 tutor images build mfe
@@ -219,16 +223,19 @@ Finally, you will have to connect QuickSight to Athena to visualize the data.
 Tutor 22 / Verawood implementation and validation details are in
 [docs/verawood-validation.md](docs/verawood-validation.md). Panorama remains a
 standalone MFE; the plugin contributes native frontend-base navigation as well.
-No Panorama release version has been changed. Before testing new images, set
+Before testing new images, set
 `PANORAMA_OPENEDX_BACKEND_VERSION` to the PyPI package version (default `22.0.0`), and
 `PANORAMA_MFE_REPO` / `PANORAMA_MFE_VERSION`, and `PANORAMA_ELT_REPO` /
-`PANORAMA_ELT_VERSION` to your reviewed source references. Historical defaults are
-retained pending manual release; they do not include these uncommitted changes.
+`PANORAMA_ELT_VERSION` to your reviewed source references. The MFE defaults to
+`release/verawood/v20260926`; the extractor still defaults to `v1.0.1`.
+Confirm the selected backend package and source references contain the changes
+being validated before building.
 For standalone MFE builds Tutor also supports a mounted source build context.
 
 `PANORAMA_MFE_ENABLED=False` disables the MFE, navigation, backend install/settings
 and migrations without disabling separately configured extraction. Backend init
-skips DEMO mode and otherwise only applies committed migrations. Backend installation uses the target platform's
+skips DEMO mode and otherwise only applies committed migrations. Backend
+installation uses the target platform's
 requirements as constraints and runs `pip check`. The install step explicitly
 bind-mounts the constraints from Tutor's `edx-platform` build stage because
 the mount used by Tutor's earlier install step does not persist.
@@ -237,17 +244,24 @@ Recurring jobs forbid overlap, retain one successful/two failed jobs and default
 one retry, a 3300-second active deadline and a 300-second scheduling deadline.
 Adjust `PANORAMA_K8S_JOB_BACKOFF_LIMIT`, `PANORAMA_K8S_JOB_ACTIVE_DEADLINE_SECONDS`
 and `PANORAMA_K8S_CRON_STARTING_DEADLINE_SECONDS` for the configured schedule.
-Both jobs use `PANORAMA_K8S_JOB_MEMORY_REQUEST` and `PANORAMA_K8S_JOB_MEMORY_LIMIT`.
+The one-off initialization Job retains Kubernetes default retries and has no
+active deadline. Both jobs use `PANORAMA_K8S_JOB_MEMORY_REQUEST` and `PANORAMA_K8S_JOB_MEMORY_LIMIT`.
 
 Fluent Bit uses a digest-pinned 3.4.15 image (Fluent Bit 5.0.9). Enable
 `PANORAMA_RUN_K8S_FLUENTBIT` in exactly one SAAS/CUSTOM site per cluster and disable
-it in every other site. That site's DaemonSet collects LMS container logs across
-all namespaces, excluding LMS workers, using the collector site's bucket/credentials.
+it in every other site. That site's DaemonSet reads `lms*.log` across all
+namespaces, excluding `lms-worker*.log`, using the collector site's bucket/credentials.
+This selects LMS pod log files, including matching sidecars; it does not filter
+by container name.
 RBAC names and host state are scoped to the hosting installation, not the source
 sites. Offsets and S3 buffers persist under
 `/var/lib/panorama-fluentbit/<collector-namespace>` on each Kubernetes node;
 Compose uses Tutor's `data/panorama-fluentbit` directory. Node/disk loss is not
-covered by this persistence. Default S3 spool capacity is 1G (`PANORAMA_FLB_STORE_LIMIT`),
+covered by this persistence. On Linux, Docker creates the Compose state directory
+and the root-running collector writes state as root; cleanup can require `sudo`.
+If running the collector as a different user, provision this directory with
+ownership writable by that container UID before starting Compose.
+Default S3 spool capacity is 1G (`PANORAMA_FLB_STORE_LIMIT`),
 tail memory 32M (`PANORAMA_FLB_TAIL_MEMORY_LIMIT`) and line limit 1M
 (`PANORAMA_FLB_LINE_MAX_SIZE`). Oversized physical lines are skipped with a warning
 so subsequent records remain readable; spool exhaustion can lose data. Monitor
@@ -256,6 +270,28 @@ Kubernetes keys retain `/tracking_logs/<source-namespace>/...`; Compose keys ret
 existing LMS-host paths. `PANORAMA_LOGS_UPLOAD_CHUNK_SIZE` is retained as a deprecated
 configuration key but is unused with PutObject. Drain existing buffers before switching
 collectors and account for the new offset path when checking duplicates at cutover.
+
+When upgrading a Kubernetes collector from the legacy global RBAC names, applying
+the new manifest does not remove the old objects. Complete this migration once
+per cluster after the replacement collector is running:
+
+1. Inspect `kubectl get clusterrolebinding pod-log-crb -o yaml` and
+   `kubectl get clusterrole pod-log-reader -o yaml`. Confirm these are the legacy
+   Panorama resources and identify every service account relying on them.
+2. Verify the new `panorama-<collector-namespace>-pod-log-crb` binding references
+   `panorama-<collector-namespace>-pod-log-reader` and the active collector's
+   `fluent-bit` service account. Confirm the collector can retrieve Kubernetes
+   metadata. Migrate any other consumers before removing their old grants.
+3. Remove the confirmed legacy binding, then the unused legacy role:
+
+   ```sh
+   kubectl delete clusterrolebinding pod-log-crb --ignore-not-found
+   kubectl delete clusterrole pod-log-reader --ignore-not-found
+   ```
+
+Do not delete a role still referenced by another binding. These are cluster-wide
+resources; disabling a site's collector or applying the new manifest alone does
+not revoke a leftover legacy binding.
 
 Set the following variables to configure Panorama:
 
@@ -282,6 +318,9 @@ Set the following variables to configure Panorama:
 | `PANORAMA_LOGS_TOTAL_FILE_SIZE` | `50M` | Maximum size of log files before uploading to S3 |
 | `PANORAMA_LOGS_UPLOAD_TIMEOUT` | `10m` | Maximum time before log files are uploaded even if they don't reach the size limit |
 | `PANORAMA_LOGS_UPLOAD_CHUNK_SIZE` | `10M` | Deprecated; unused for PutObject uploads |
+| `PANORAMA_K8S_JOB_BACKOFF_LIMIT` | `1` | Retry limit for recurring extraction jobs |
+| `PANORAMA_K8S_JOB_ACTIVE_DEADLINE_SECONDS` | `3300` | Active deadline in seconds for recurring extraction jobs |
+| `PANORAMA_K8S_CRON_STARTING_DEADLINE_SECONDS` | `300` | Maximum scheduling delay in seconds for extraction CronJobs |
 | `PANORAMA_K8S_JOB_MEMORY_REQUEST` / `PANORAMA_K8S_JOB_MEMORY_LIMIT` |  | Memory request/limit for one-off and recurring jobs |
 | `PANORAMA_FLB_MEM_REQUEST` | `100Mi` | Memory request for Fluentbit daemonsets in K8s. |
 | `PANORAMA_FLB_CPU_REQUEST` | `100m` | CPU request for Fluentbit daemonsets in K8s. |
