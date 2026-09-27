@@ -1,0 +1,4 @@
+{% if PANORAMA_MFE_ENABLED %}
+import { createElement as panoramaSiteCreateElement, useEffect as panoramaSiteUseEffect, useState as panoramaSiteUseState } from 'react';
+import { useAuthenticatedUser as panoramaSiteUseUser, useSiteConfig as panoramaSiteUseConfig, getAuthenticatedHttpClient as panoramaSiteHttpClient, WidgetOperationTypes as PanoramaWidgetOperationTypes } from '@openedx/frontend-base';
+{% endif %}

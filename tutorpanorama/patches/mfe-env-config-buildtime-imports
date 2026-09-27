@@ -1,2 +1,5 @@
-import { createElement } from 'react';
-import { getConfig } from '@edx/frontend-platform';
+{% if PANORAMA_MFE_ENABLED and current_mfe is not defined %}
+import { createElement as panoramaCreateElement, useEffect as panoramaUseEffect, useState as panoramaUseState } from 'react';
+import { getConfig as panoramaGetConfig, subscribe as panoramaSubscribe, unsubscribe as panoramaUnsubscribe } from '@edx/frontend-platform';
+import { getAuthenticatedUser as panoramaGetAuthenticatedUser, getAuthenticatedHttpClient as panoramaGetAuthenticatedHttpClient, AUTHENTICATED_USER_CHANGED as PANORAMA_AUTH_CHANGED } from '@edx/frontend-platform/auth';
+{% endif %}

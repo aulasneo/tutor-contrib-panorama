@@ -1,0 +1,16 @@
+{
+  "name": "tutor-contrib-panorama-tests",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/navigation.cjs"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/plugin-transform-typescript": "^7.28.0",
+    "@testing-library/dom": "^10.0.0",
+    "@testing-library/react": "^16.3.0",
+    "jsdom": "^26.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

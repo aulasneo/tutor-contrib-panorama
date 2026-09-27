@@ -1,2 +1,4 @@
-MFE_CONFIG["PANORAMA_URL"] = "http://{{ MFE_HOST }}/panorama/"
+{% if PANORAMA_MFE_ENABLED %}
+MFE_CONFIG["PANORAMA_URL"] = "{{ 'https' if ENABLE_HTTPS else 'http' }}://{{ MFE_HOST }}/panorama/"
 MFE_CONFIG["PANORAMA_ENABLE_STUDENT_VIEW"] = {{ PANORAMA_ENABLE_STUDENT_VIEW }}
+{% endif %}

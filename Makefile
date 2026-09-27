@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: docs
+.PHONY: docs requirements upgrade
 
 PYTHON ?= python3
 SRC_DIRS = ./tutorpanorama
@@ -8,12 +8,11 @@ BLACK_OPTS = --exclude templates ${SRC_DIRS}
 clean: ## Remove build artifacts
 	rm -rf build dist *.egg-info
 
-upgrade: ## Compile requirements from requirements.in
-	pip-compile
+upgrade: ## Upgrade project and development dependencies from pyproject.toml
+	$(PYTHON) -m pip install --upgrade --upgrade-strategy eager -e '.[dev]'
 
-requirements: ## Install requirements from requirements.txt
-	$(PYTHON) -m pip install --upgrade -r requirements.txt
-	$(PYTHON) -m pip install -e .
+requirements: ## Install project and development dependencies from pyproject.toml
+	$(PYTHON) -m pip install --upgrade -e '.[dev]'
 
 build: clean ## Build the package
 	$(PYTHON) -m build
@@ -21,8 +20,7 @@ build: clean ## Build the package
 dist: ## Upload package to PyPI
 	twine upload dist/*
 
-# Warning: These checks are not necessarily run on every PR.
-test: test-lint test-types test-format test-dist test-tutor ## Run some static checks.
+test: test-lint test-types test-format test-dist test-tutor test-unit test-navigation ## Run static, packaging, Python, and navigation checks.
 
 test-format: ## Run code formatting tests
 	black --check --diff $(BLACK_OPTS)
@@ -37,7 +35,17 @@ test-dist: build ## Check the distribution files
 	twine check dist/*
 
 test-tutor:
-	export TUTOR_ROOT=$$(pwd); tutor config save; tutor plugins enable panorama
+	export TUTOR_ROOT=$$(mktemp -d); trap 'rm -rf "$$TUTOR_ROOT"' EXIT; \
+		tutor plugins enable mfe panorama && tutor config save
+
+test-unit: ## Run Python contract tests
+	$(PYTHON) -m pytest tests
+
+test-navigation: ## Test navigation and parse the generated combined MFE configuration
+	npm ci --ignore-scripts
+	export TUTOR_ROOT=$$(mktemp -d); trap 'rm -rf "$$TUTOR_ROOT"' EXIT; \
+		tutor plugins enable mfe panorama && tutor config save && \
+		PANORAMA_GENERATED_ENV="$$TUTOR_ROOT/env/plugins/mfe/build/mfe/env.config.jsx" node --test tests/navigation.cjs
 
 format: ## Format code automatically
 	black $(BLACK_OPTS)

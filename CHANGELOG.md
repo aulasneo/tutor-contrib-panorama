@@ -1,5 +1,26 @@
 # Change log
 
+## Unreleased
+
+- feat: Support Tutor 22 / Open edX Verawood while keeping Panorama as a standalone MFE.
+- feat: Add native frontend-base desktop and mobile navigation alongside existing standalone MFE slots. Check backend access grants and refresh link visibility when authentication changes.
+- fix: Use Panorama-specific JavaScript import aliases to avoid collisions with other plugins, and omit legacy navigation patches from frontend-base compatibility files.
+- fix: Apply `PANORAMA_MFE_ENABLED` consistently to app registration, navigation, backend installation/settings and initialization. Refresh tutor-mfe registry caches after loading configuration.
+- fix: Skip backend migrations in DEMO mode and when the MFE is disabled. Apply committed migrations only; remove initialization-time `makemigrations`.
+- fix: Respect `ENABLE_HTTPS` in production Panorama URLs while retaining the standalone development port.
+- feat: Make the backend PyPI version and MFE/extractor Git repositories and references configurable for testing. Default the MFE to the Verawood release branch.
+- fix: Constrain backend dependency installation to the target platform's `requirements/edx/base.txt` and verify the installed environment with `pip check`.
+- build: Complete the Hatch/PEP 621 packaging migration, remove conflicting `setup.py` metadata, and include templates, patches, slot definitions, tests and documentation in distribution artifacts.
+- build: Use Python 3.12 for the Tutor extractor image, install its dependency lock and package, and retain cron and legacy script support.
+- fix: Prevent overlapping extraction CronJobs, add configurable retry and execution deadlines, bound job history, and apply memory requests/limits to recurring jobs as well as one-off jobs.
+- fix: Shell-quote table selections passed to extractor commands.
+- build: Upgrade AWS for Fluent Bit to digest-pinned 3.4.15 (Fluent Bit 5.0.9), removing unnecessary AWS CLI installation and OS-wide updates.
+- fix: Use built-in Docker/CRI multiline parsing and remove the unused custom Docker parser. Preserve cluster-wide LMS log collection, worker exclusion, existing tracking-event regexes and consumer S3 paths; enable the DaemonSet in only one site per cluster.
+- feat: Persist Fluent Bit tail offsets and pending S3 uploads for Kubernetes and Compose. Scope Kubernetes state directories and cluster RBAC names to the collector installation; document removal of legacy cluster RBAC objects during upgrade.
+- fix: Make tail memory, physical-line size and S3 spool limits configurable, bound Kubernetes metadata buffers, skip oversized lines to continue collection, and render the configured log level.
+- fix: Drop records without a parsed event before S3 output and remove the ineffective multipart chunk-size option from PutObject uploads.
+- test: Add regression coverage for mode/configuration combinations, navigation access and authentication changes, generated plugin configuration, and Fluent Bit replay/local S3 delivery. Document validation results and remaining staging checks.
+
 ## Version 21.3.0 (2026-08-27)
 - feat: Hide the Panorama link if PANORAMA_ENABLE_STUDENT_VIEW=False and the user is not admin.
 

@@ -6,24 +6,22 @@ from __future__ import annotations
 
 from glob import glob
 import os
+import shlex
 from typing import Any
 
 import click
 import importlib_resources
 
-from tutor import hooks, config as tutor_config
-from tutormfe.hooks import MFE_APPS, PLUGIN_SLOTS
+from tutor import hooks
+from tutormfe.hooks import MFE_APPS, PLUGIN_SLOTS, FRONTEND_SLOTS
 
 from .__about__ import __version__
 
-# Temporary git-based backend source for Ulmo / Tutor 21 rollout.
-PANORAMA_OPENEDX_BACKEND_REPO = (
-    "https://github.com/aulasneo/panorama-openedx-backend.git"
-)
-PANORAMA_OPENEDX_BACKEND_VERSION = "release/ulmo/20260401"
+# PyPI package version.
+PANORAMA_OPENEDX_BACKEND_VERSION = "22.0.0"
 
 PANORAMA_MFE_REPO = "https://github.com/aulasneo/frontend-app-panorama.git"
-PANORAMA_MFE_VERSION = "release/ulmo/20260629"
+PANORAMA_MFE_VERSION = "release/verawood/v20260926"
 
 # Tag at https://github.com/aulasneo/panorama-elt.git
 PANORAMA_ELT_VERSION = "v1.0.1"
@@ -35,6 +33,11 @@ config = {
     # Add here your new settings
     "defaults": {
         "VERSION": __version__,
+        "OPENEDX_BACKEND_VERSION": PANORAMA_OPENEDX_BACKEND_VERSION,
+        "MFE_REPO": PANORAMA_MFE_REPO,
+        "MFE_VERSION": PANORAMA_MFE_VERSION,
+        "ELT_REPO": "https://github.com/aulasneo/panorama-elt.git",
+        "ELT_VERSION": PANORAMA_ELT_VERSION,
         "CRONTAB": "55 * * * *",
         "BUCKET": "",
         "RAW_LOGS_BUCKET": "{{ PANORAMA_BUCKET }}",
@@ -52,6 +55,13 @@ config = {
         "LOGS_TOTAL_FILE_SIZE": "50M",
         "LOGS_UPLOAD_TIMEOUT": "10m",
         "LOGS_UPLOAD_CHUNK_SIZE": "10M",
+        "FLB_BASE_IMAGE": "public.ecr.aws/aws-observability/aws-for-fluent-bit:3.4.15@sha256:88e1b56cedb230486afeca6eeb26c5f6bd59c48879d0054d1674d5a58838c607",
+        "FLB_STORE_LIMIT": "1G",
+        "FLB_TAIL_MEMORY_LIMIT": "32M",
+        "FLB_LINE_MAX_SIZE": "1M",
+        "K8S_JOB_BACKOFF_LIMIT": 1,
+        "K8S_JOB_ACTIVE_DEADLINE_SECONDS": 3300,
+        "K8S_CRON_STARTING_DEADLINE_SECONDS": 300,
         "DOCKER_IMAGE": "{{ DOCKER_REGISTRY }}aulasneo/panorama-elt:{{ PANORAMA_VERSION }}",
         "LOGS_DOCKER_IMAGE": "{{ DOCKER_REGISTRY }}aulasneo/panorama-elt-logs:{{ PANORAMA_VERSION }}",
         "MFE_ENABLED": True,
@@ -165,22 +175,61 @@ for path in glob(str(importlib_resources.files("tutorpanorama") / "patches" / "*
     with open(path, encoding="utf-8") as patch_file:
         hooks.Filters.ENV_PATCHES.add_item((os.path.basename(path), patch_file.read()))
 
-# Load plugin slot configs from files
+# Load plugin slot configs from files (slot strings are not Jinja-rendered by Tutor).
+_panorama_slots = []
 for path in glob(
     str(importlib_resources.files("tutorpanorama") / "plugin_slots" / "*" / "*")
 ):
     with open(path, encoding="utf-8") as slot_file:
         mfe_name = os.path.basename(os.path.dirname(path))
         slot_name = os.path.basename(path)
-        PLUGIN_SLOTS.add_item((mfe_name, slot_name, slot_file.read()))
+        _panorama_slots.append((mfe_name, slot_name, slot_file.read()))
 
-hooks.Filters.ENV_TEMPLATE_VARIABLES.add_items(
-    [
-        ("PANORAMA_OPENEDX_BACKEND_REPO", PANORAMA_OPENEDX_BACKEND_REPO),
-        ("PANORAMA_OPENEDX_BACKEND_VERSION", PANORAMA_OPENEDX_BACKEND_VERSION),
-        ("PANORAMA_ELT_VERSION", PANORAMA_ELT_VERSION),
-    ]
-)
+_loaded_config: dict[str, Any] = {}
+
+
+@hooks.Actions.CONFIG_LOADED.add()
+def _load_panorama_config(loaded_config: dict[str, Any]) -> None:
+    _loaded_config.clear()
+    _loaded_config.update(loaded_config)
+    # tutor-mfe may resolve its cached registry while defaults are being rendered,
+    # before CONFIG_LOADED. Refresh it for the final configuration (including --set).
+    from tutormfe import plugin as mfe_plugin
+
+    for getter in (
+        mfe_plugin.get_mfes,
+        mfe_plugin.get_plugin_slots,
+        mfe_plugin.get_frontend_slots,
+    ):
+        getter.cache_clear()
+
+
+def _setting(name: str) -> Any:
+    return _loaded_config.get(f"PANORAMA_{name}", config["defaults"][name])
+
+
+@PLUGIN_SLOTS.add()  # type: ignore[untyped-decorator]
+def _panorama_legacy_slots(
+    slots: list[tuple[str, str, str]],
+) -> list[tuple[str, str, str]]:
+    if _setting("MFE_ENABLED"):
+        slots.extend(_panorama_slots)
+    return slots
+
+
+@FRONTEND_SLOTS.add()  # type: ignore[untyped-decorator]
+def _panorama_frontend_slots(slots: list[str]) -> list[str]:
+    if _setting("MFE_ENABLED"):
+        for target in ("secondaryLinks", "mobileMenuLinks"):
+            slots.append(
+                "{ op: PanoramaWidgetOperationTypes.APPEND, "
+                "slotId: 'org.openedx.frontend.slot.header."
+                + target
+                + ".v1', id: 'panorama_"
+                + target
+                + "', component: PanoramaSiteLink }"
+            )
+    return slots
 
 
 # Commands
@@ -234,7 +283,7 @@ def extract_and_load(
     else:
         if not tables:
             raise click.BadParameter("Define either --all or --tables")
-        command.append(f"--tables {tables}")
+        command.append(f"--tables {shlex.quote(tables)}")
 
     if force:
         command.append("--force")
@@ -244,10 +293,13 @@ def extract_and_load(
 
 @MFE_APPS.add()  # type: ignore[untyped-decorator]
 def _add_panorama_mfes(mfes: dict[str, Any]) -> dict[str, Any]:
+    if not _setting("MFE_ENABLED"):
+        mfes.pop("panorama", None)
+        return mfes
     mfes["panorama"] = {
-        "repository": PANORAMA_MFE_REPO,
-        "port": PANORAMA_MFE_PORT,
-        "version": PANORAMA_MFE_VERSION,
+        "repository": _setting("MFE_REPO"),
+        "port": _setting("MFE_PORT"),
+        "version": _setting("MFE_VERSION"),
     }
 
     return mfes

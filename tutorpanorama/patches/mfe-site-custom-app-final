@@ -1,0 +1,21 @@
+{% if PANORAMA_MFE_ENABLED %}
+function PanoramaSiteLink() {
+  const user = panoramaSiteUseUser();
+  const config = panoramaSiteUseConfig();
+  const href = config.commonAppConfig?.PANORAMA_URL as string | undefined;
+  const lms = config.lmsBaseUrl;
+  const [access, setAccess] = panoramaSiteUseState<{ user: typeof user; allowed: boolean } | null>(null);
+  panoramaSiteUseEffect(() => {
+    let active = true;
+    setAccess(null);
+    if (user && href && lms) {
+      panoramaSiteHttpClient().get(`${lms}/panorama/api/get-user-access`)
+        .then(({ data }) => { if (active) setAccess({ user, allowed: data.body === true }); })
+        .catch(() => { if (active) setAccess(null); });
+    }
+    return () => { active = false; };
+  }, [user, href, lms]);
+  return href && user && access?.user === user && access.allowed
+    ? panoramaSiteCreateElement('a', { className: 'nav-link', href }, 'Panorama') : null;
+}
+{% endif %}

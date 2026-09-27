@@ -1,7 +1,7 @@
 {
   op: PLUGIN_OPERATIONS.Insert,
   widget: {
-    id: 'panorama_secondary_menu_item',
+    id: 'panorama_mobile_menu_item',
     type: DIRECT_PLUGIN,
     priority: 10,
     RenderWidget: PanoramaNavigationLink,
