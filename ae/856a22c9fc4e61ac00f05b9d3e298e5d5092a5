@@ -1,0 +1,29 @@
+CHANGELOG.md
+  s_1143174d7d8124::t_1e0dcc5813332f 3-6
+tutorpanorama/patches/openedx-dockerfile-post-python-requirements
+  s_f3a8e802aceaf9::t_223ecefd864a75 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ae856a22c9fc4e61ac00f05b9d3e298e5d5092a5",
+  "prompts": {},
+  "sessions": {
+    "s_1143174d7d8124": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "07295985-b106-4c3e-bbab-a7ef4cc6b8ca",
+        "model": "unknown"
+      },
+      "human_author": "Andrés González <andres@aulasneo.com>"
+    },
+    "s_f3a8e802aceaf9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "20693f1a-4c46-4081-9d4a-dd1e3694fb81",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Andrés González <andres@aulasneo.com>"
+    }
+  }
+}
