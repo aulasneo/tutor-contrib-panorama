@@ -1,6 +1,6 @@
 # Change log
 
-## Version 23.0.0a1 (2026-09-27)
+## Unreleased
 
 - feat: Support Tutor 22 / Open edX Verawood while keeping Panorama as a standalone MFE.
 - feat: Add native frontend-base desktop and mobile navigation alongside existing standalone MFE slots. Check backend access grants and refresh link visibility when authentication changes.
