@@ -1,5 +1,9 @@
 # Change log
 
+## Unreleased
+
+- fix: ERROR: Constraints cannot have extras
+
 ## Version 22.0.0 (2026-10-05)
 
 - feat: Support Tutor 22 / Open edX Verawood while keeping Panorama as a standalone MFE.

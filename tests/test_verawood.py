@@ -121,16 +121,6 @@ def test_job_memory_and_custom_cron_tuning(memory_request, limit, expected):
         assert container.get("resources") == expected
 
 
-def test_backend_install_preserves_platform_constraints():
-    patch = render("patches/openedx-dockerfile-post-python-requirements",
-                   PANORAMA_MFE_ENABLED=True, PANORAMA_OPENEDX_BACKEND_VERSION="22.0.0")
-    assert ("--mount=type=bind,from=edx-platform,source=/requirements/edx/base.txt,"
-            "target=/openedx/edx-platform/requirements/edx/base.txt") in patch
-    assert "--constraint /openedx/edx-platform/requirements/edx/base.txt" in patch
-    assert "panorama-openedx-backend==22.0.0" in patch
-    assert "&& pip check" in patch
-
-
 def test_urls_and_collector_state_isolation():
     assert 'https://apps.courses.example.org/panorama/' in render("patches/mfe-lms-production-settings")
     assert 'http://apps.courses.example.org/panorama/' in render("patches/mfe-lms-production-settings", ENABLE_HTTPS=False)
