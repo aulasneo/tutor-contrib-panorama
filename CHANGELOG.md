@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 22.0.1a1 (2026-10-05)
 
 - fix: ERROR: Constraints cannot have extras
 
