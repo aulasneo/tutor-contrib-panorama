@@ -1,0 +1,19 @@
+CHANGELOG.md
+  s_1143174d7d8124::t_1e0dcc5813332f 3-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a7b7c1f4a7d7a22c45ed0f89f67e539bb00b6e00",
+  "prompts": {},
+  "sessions": {
+    "s_1143174d7d8124": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "07295985-b106-4c3e-bbab-a7ef4cc6b8ca",
+        "model": "unknown"
+      },
+      "human_author": "Andrés González <andres@aulasneo.com>"
+    }
+  }
+}
