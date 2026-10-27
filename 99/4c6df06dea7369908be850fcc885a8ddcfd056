@@ -1,0 +1,20 @@
+tutorpanorama/plugin.py
+  s_bd810509d9f3d8::t_a4426274213409 34
+  s_bd810509d9f3d8::t_2f02a90042bc77 8-9,74-75,83-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "994c6df06dea7369908be850fcc885a8ddcfd056",
+  "prompts": {},
+  "sessions": {
+    "s_bd810509d9f3d8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17e29-9c30-74a3-858a-140ecdd60e50",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Andrés González <andres@aulasneo.com>"
+    }
+  }
+}
