@@ -304,7 +304,7 @@ Set the following variables to configure Panorama:
 | `PANORAMA_ENABLE_STUDENT_VIEW` | `True` | Allow students to access the student's panel |
 | `PANORAMA_MFE_PORT` | `2100` | Internal port of the Panorama MFE |
 | `PANORAMA_RAW_LOGS_BUCKET` | `PANORAMA_BUCKET` | S3 bucket to store the tracking logs |
-| `PANORAMA_CRONTAB` | `55 * * * *` | Crontab entry to update the datasets |
+| `PANORAMA_CRONTAB` | `<minute> * * * *` | Hourly dataset updates at a random minute (0–59), selected per installation and saved in Tutor configuration. Existing configured schedules are preserved. |
 | `PANORAMA_BASE_PREFIX` | `openedx` | Directory inside the `PANORAMA_BUCKET` to store the raw data |
 | `PANORAMA_REGION` | `us-east-1` | AWS default region |
 | `PANORAMA_DATALAKE_DATABASE` | `panorama` | Name of the AWS Athena database |
@@ -321,7 +321,8 @@ Set the following variables to configure Panorama:
 | `PANORAMA_K8S_JOB_BACKOFF_LIMIT` | `1` | Retry limit for recurring extraction jobs |
 | `PANORAMA_K8S_JOB_ACTIVE_DEADLINE_SECONDS` | `3300` | Active deadline in seconds for recurring extraction jobs |
 | `PANORAMA_K8S_CRON_STARTING_DEADLINE_SECONDS` | `300` | Maximum scheduling delay in seconds for extraction CronJobs |
-| `PANORAMA_K8S_JOB_MEMORY_REQUEST` / `PANORAMA_K8S_JOB_MEMORY_LIMIT` |  | Memory request/limit for one-off and recurring jobs |
+| `PANORAMA_K8S_JOB_MEMORY_REQUEST` | `500Mi` | Memory request for one-off and recurring jobs |
+| `PANORAMA_K8S_JOB_MEMORY_LIMIT` | `1Gi` | Memory limit for one-off and recurring jobs |
 | `PANORAMA_FLB_MEM_REQUEST` | `100Mi` | Memory request for Fluentbit daemonsets in K8s. |
 | `PANORAMA_FLB_CPU_REQUEST` | `100m` | CPU request for Fluentbit daemonsets in K8s. |
 | `PANORAMA_FLB_MEM_LIMIT` | `256Mi` | Memory limit for Fluentbit daemonsets in K8s. |
