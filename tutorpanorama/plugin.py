@@ -5,6 +5,8 @@ Tutor plugin to enable Panorama in Open edX.
 from __future__ import annotations
 
 from glob import glob
+from random import randint
+
 import os
 import shlex
 from typing import Any
@@ -29,7 +31,7 @@ PANORAMA_ELT_VERSION = "v1.0.1"
 PANORAMA_MFE_PORT = 2100
 
 # Configuration
-config = {
+config: dict[str, dict[str, Any]] = {
     # Add here your new settings
     "defaults": {
         "VERSION": __version__,
@@ -38,7 +40,6 @@ config = {
         "MFE_VERSION": PANORAMA_MFE_VERSION,
         "ELT_REPO": "https://github.com/aulasneo/panorama-elt.git",
         "ELT_VERSION": PANORAMA_ELT_VERSION,
-        "CRONTAB": "55 * * * *",
         "BUCKET": "",
         "RAW_LOGS_BUCKET": "{{ PANORAMA_BUCKET }}",
         "BASE_PREFIX": "openedx",
@@ -70,8 +71,8 @@ config = {
         "ENABLE_STUDENT_VIEW": True,
         "DEFAULT_USER_ARN": "arn:aws:quicksight:{{ PANORAMA_REGION }}:{{ PANORAMA_AWS_ACCOUNT_ID }}:"
         "user/default/{{ LMS_HOST }}",
-        "K8S_JOB_MEMORY_REQUEST": None,
-        "K8S_JOB_MEMORY_LIMIT": None,
+        "K8S_JOB_MEMORY_REQUEST": "500Mi",
+        "K8S_JOB_MEMORY_LIMIT": "1Gi",
         "FLB_CPU_LIMIT": "500m",
         "FLB_MEM_LIMIT": "256Mi",
         "FLB_CPU_REQUEST": "100m",
@@ -79,7 +80,9 @@ config = {
     },
     # Add here settings that don't have a reasonable default for all users. For
     # instance: passwords, secret keys, etc.
-    "unique": {},
+    "unique": {
+        "CRONTAB": f"{str(randint(0, 59))} * * * *",
+    },
     # Danger zone! Add here values to override settings from Tutor core or other plugins.
     "overrides": {},
 }

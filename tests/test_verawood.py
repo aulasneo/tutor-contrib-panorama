@@ -10,7 +10,11 @@ ROOT = Path(__file__).resolve().parents[1] / "tutorpanorama"
 
 
 def render(path, **overrides):
-    values = {f"PANORAMA_{key}": value for key, value in plugin.config["defaults"].items()}
+    values = {
+        f"PANORAMA_{key}": value
+        for section in ("defaults", "unique")
+        for key, value in plugin.config[section].items()
+    }
     values.update(K8S_NAMESPACE="school-a", LMS_HOST="courses.example.org", MFE_HOST="apps.courses.example.org", ENABLE_HTTPS=True,
                   PANORAMA_DOCKER_IMAGE="panorama:test", PANORAMA_LOGS_DOCKER_IMAGE="panorama-logs:test",
                   PANORAMA_AWS_ACCESS_KEY="test-key", PANORAMA_AWS_SECRET_ACCESS_KEY="test-secret")
@@ -33,7 +37,7 @@ def test_mode_matrix(mode, enabled, fluent):
     assert bool(cron) == (mode != "DEMO")
     if cron:
         assert cron["spec"]["concurrencyPolicy"] == "Forbid"
-        assert cron["spec"]["schedule"] == "55 * * * *"
+        assert cron["spec"]["schedule"] == plugin.config["unique"]["CRONTAB"]
         assert cron["spec"]["startingDeadlineSeconds"] == 300
         assert cron["spec"]["successfulJobsHistoryLimit"] == 1
         assert cron["spec"]["failedJobsHistoryLimit"] == 2
