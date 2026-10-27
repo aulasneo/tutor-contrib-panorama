@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 22.1.0 (2026-10-27)
 
 - Set default values for memory requests and limits for the ELT job.
 - Randomize the minute to run the ELT job
