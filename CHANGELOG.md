@@ -1,5 +1,9 @@
 # Change log
 
+## Unreleased
+
+- Update MFE version release/verawood/v20261117
+
 ## Version 22.1.0 (2026-10-27)
 
 - Set default values for memory requests and limits for the ELT job.
