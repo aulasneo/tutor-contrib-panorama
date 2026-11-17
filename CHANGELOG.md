@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## Version 22.1.1 (2026-11-17)
 
 - Update MFE version release/verawood/v20261117
 
