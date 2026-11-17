@@ -227,7 +227,7 @@ Before testing new images, set
 `PANORAMA_OPENEDX_BACKEND_VERSION` to the PyPI package version (default `22.0.0`), and
 `PANORAMA_MFE_REPO` / `PANORAMA_MFE_VERSION`, and `PANORAMA_ELT_REPO` /
 `PANORAMA_ELT_VERSION` to your reviewed source references. The MFE defaults to
-`release/verawood/v20260926`; the extractor still defaults to `v1.0.1`.
+`release/verawood/v20261117`; the extractor still defaults to `v1.0.1`.
 Confirm the selected backend package and source references contain the changes
 being validated before building.
 For standalone MFE builds Tutor also supports a mounted source build context.

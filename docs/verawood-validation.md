@@ -62,7 +62,7 @@ invalidates tutor-mfe caches after final configuration loading. Init applies com
 migrations outside DEMO mode; DEMO skips backend initialization. The original
 validation used source overrides or mounted reviewed sources and required
 operator configuration. Current defaults use backend PyPI version `22.0.0`,
-MFE `release/verawood/v20260926` and extractor `v1.0.1`; verify these artifacts
+MFE `release/verawood/v20261117` and extractor `v1.0.1`; verify these artifacts
 contain the changes being tested.
 
 CronJobs forbid overlap and have bounded deadlines/retries/history and memory
